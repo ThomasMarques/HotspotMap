@@ -1,0 +1,8 @@
+{
+    "require": {
+        "silex/silex": "~1.1"
+    },
+    "autoload": {
+        "psr-0": { "HotspotMap\\": ["src/"] }
+    }
+}
