@@ -48,6 +48,14 @@ class PlaceMapperUnitTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($errors);
         $this->assertNotNull($place->getPlaceId());
         ///
+
+        /// Violated constraint ...
+        $place = new \hotspotMap\model\Place();
+
+        $errors = self::$userMapper->persist($place);
+
+        $this->assertNotEmpty($errors);
+        ///
     }
 
     public function testUpdatePlace()

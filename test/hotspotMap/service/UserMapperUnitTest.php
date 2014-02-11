@@ -51,6 +51,16 @@ class UserMapperUnitTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($errors);
         $this->assertNotNull($user->getUserId());
         ///
+
+        /// Violated constraint unique on mailAddress
+        $user = new \hotspotMap\model\User();
+        $user->setMailAddress("good@address.fr");
+        $user->setPrivilege(0);
+        $user->setDisplayName("Display Name");
+        $errors = self::$userMapper->persist($user);
+
+        $this->assertNotEmpty($errors);
+        ///
     }
 
     public function testUpdateUser()

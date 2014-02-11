@@ -48,6 +48,14 @@ class CommentMapperUnitTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($errors);
         $this->assertNotNull($comment->getCommentId());
         ///
+
+        /// Violated constraint ...
+        $comment = new \hotspotMap\model\Comment();
+
+        $errors = self::$userMapper->persist($comment);
+
+        $this->assertNotEmpty($errors);
+        ///
     }
 
     public function testUpdateComment()
