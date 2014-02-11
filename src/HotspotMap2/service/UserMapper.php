@@ -1,12 +1,11 @@
 <?php
 
-namespace service;
+namespace hotspotMap\service;
 
 require_once __DIR__ . "/../model/User.php";
-require_once __DIR__ . "/../model/Place.php";
-require_once __DIR__ . "/../model/Comment.php";
 
-class EntityMapper {
+class UserMapper
+{
 
     /**
      * @var DataAccessLayer
@@ -22,12 +21,12 @@ class EntityMapper {
     }
 
     /**
-     * @param \model\User $user
-     * @return bool
+     * @param \hotspotmap\model\User $user
+     * @return array
      */
-    public function persistUser(\model\User $user)
+    public function persist(\hotspotmap\model\User $user)
     {
-        $errors = $this->checkUserAttribute($user);
+        $errors = $this->checkAttribute($user);
 
         if(empty($errors))
         {
@@ -55,9 +54,11 @@ SQL;
                 $parameters["userId"] = $user->getUserId();
             }
 
+            /// Filling all parameters
             $parameters["mailAddress"] = htmlentities($user->getMailAddress());
             $parameters["privilege"] = $user->getPrivilege();
             $parameters["displayName"] = htmlentities($user->getDisplayName());
+            ///
 
             $success = $this->dal->executeQuery($query, $parameters);
             if($success)
@@ -77,16 +78,16 @@ SQL;
     }
 
     /**
-     * @param \model\User $user
+     * @param \hotspotmap\model\User $user
      * @return array
      */
-    public function removeUser(\model\User $user)
+    public function remove(\hotspotmap\model\User $user)
     {
         $errors = [];
 
         if(null === $user->getUserId())
         {
-            $errors["id"];
+            $errors["id"] = "Missing Id";
         }
         else
         {
@@ -105,42 +106,10 @@ SQL;
     }
 
     /**
-     * @param Place $place
-     */
-    public function persistPlace(Place $place)
-    {
-
-    }
-
-    /**
-     * @param Place $place
-     */
-    public function removePlace(Place $place)
-    {
-
-    }
-
-    /**
-     * @param Comment $comment
-     */
-    public function persistComment(Comment $comment)
-    {
-
-    }
-
-    /**
-     * @param Comment $comment
-     */
-    public function removeComment(Comment $comment)
-    {
-
-    }
-
-    /**
-     * @param \model\User $user
+     * @param \hotspotmap\model\User $user
      * @return array
      */
-    private function checkUserAttribute(\model\User $user)
+    private function checkAttribute(\hotspotmap\model\User $user)
     {
         $errors = [];
 

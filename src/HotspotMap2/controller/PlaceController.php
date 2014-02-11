@@ -1,6 +1,6 @@
 <?php
 
-namespace HotspotMap\Controller;
+namespace hotspotMap\Controller;
 
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;

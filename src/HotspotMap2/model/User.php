@@ -1,6 +1,6 @@
 <?php
 
-namespace model;
+namespace hotspotMap\model;
 
 abstract class Privilege
 {

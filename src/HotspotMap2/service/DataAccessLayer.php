@@ -1,6 +1,6 @@
 <?php
 
-namespace service;
+namespace HotspotMap\service;
 
 
 class DataAccessLayer extends \PDO
