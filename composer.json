@@ -1,6 +1,10 @@
 {
     "require": {
-        "silex/silex": "~1.1"
+        "silex/silex": "~1.1",
+        "friendsofsymfony/rest-bundle": "dev-master",
+        "willdurand/hateoas": "@stable",
+        "willdurand/negotiation": "@stable",
+        "twig/twig": ">=1.8,<2.0-dev"
     },
     "autoload": {
         "psr-0": { "HotspotMap\\": ["src/"] }
