@@ -30,7 +30,7 @@ class PlaceMapperUnitTest extends \PHPUnit_Framework_TestCase
     {
         $place = new \hotspotMap\model\Place();
         /// Insertion with null arguments (name, latitude, longitude)
-        //$place->setSchedules("07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00");
+        $place->setSchedules("07:30 – 21:00");//\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00");
         $place->setDescription("Good Starbuks with Wifi");
         $place->setCoffee(true);
         $place->setInternetAccess(true);
@@ -58,25 +58,41 @@ class PlaceMapperUnitTest extends \PHPUnit_Framework_TestCase
         $place->setLatitude(2.29791);
         $errors = self::$placeMapper->persist($place);
 
+        print_r($errors);
+
         $this->assertEmpty($errors);
         $this->assertNotNull($place->getPlaceId());
         ///
     }
 
-    /*public function testUpdatePlace()
+    public function testUpdatePlace()
     {
         /// Insertion
         $place = new \hotspotMap\model\Place();
+        $place->setName("Starbucks");
+        $place->setSchedules("07:30 – 21:00");//\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00");
+        $place->setDescription("Good Starbuks with Wifi");
+        $place->setCoffee(true);
+        $place->setInternetAccess(true);
+        $place->setPlacesNumber(100);
+        $place->setComfort(4);
+        $place->setFrequenting(4);
+        $place->setSubmissionDate(new \DateTime());
+        $place->setValidate(0);
         self::$placeMapper->persist($place);
         ///
 
-        /// Bad update with bad...
+        /// Bad update with bad location
+        $place->setLongitude(200);
+        $place->setLatitude(-120);
         $errors = self::$placeMapper->persist($place);
 
         $this->assertNotEmpty($errors);
         ///
 
-        /// Update with good parameters...
+        /// Update with good parameters
+        $place->setLongitude(48.84951);
+        $place->setLatitude(2.29791);
         $errors = self::$placeMapper->persist($place);
 
         $this->assertEmpty($errors);
@@ -87,6 +103,18 @@ class PlaceMapperUnitTest extends \PHPUnit_Framework_TestCase
     {
         /// Insertion
         $place = new \hotspotMap\model\Place();
+        $place->setName("Starbucks");
+        $place->setLongitude(48.84951);
+        $place->setLatitude(2.29791);
+        $place->setSchedules("07:30 – 21:00");//\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00");
+        $place->setDescription("Good Starbuks with Wifi");
+        $place->setCoffee(true);
+        $place->setInternetAccess(true);
+        $place->setPlacesNumber(100);
+        $place->setComfort(4);
+        $place->setFrequenting(4);
+        $place->setSubmissionDate(new \DateTime());
+        $place->setValidate(0);
         self::$placeMapper->persist($place);
         ///
 
@@ -104,7 +132,7 @@ class PlaceMapperUnitTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEmpty($errors);
         ///
-    }*/
+    }
 
     protected function setUp()
     {

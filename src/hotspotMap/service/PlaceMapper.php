@@ -37,8 +37,8 @@ class PlaceMapper
                 // Insert
                 $query = <<<SQL
 INSERT INTO place
-(placeId, name, latitude, longitude, schedules, description, coffee, internetAccess, placesNumber, comfort, frequenting, visitNumber, submissionDate, validate)
-VALUES (NULL, :name, :longitude, :latitude, :schedules, :description, :coffee, :internetAccess, :placesNumber, :comfort, :frequenting, :submissionDate, :validate);
+(placeId, name, longitude, latitude, schedules, description, coffee, internetAccess, placesNumber, comfort, frequenting, visitNumber, submissionDate, validate)
+VALUES (NULL, :name, :longitude, :latitude, :schedules, :description, :coffee, :internetAccess, :placesNumber, :comfort, :frequenting, :visitNumber, :submissionDate, :validate);
 SQL;
             }
             else
@@ -55,6 +55,7 @@ coffee = :coffee,
 internetAccess = :internetAccess,
 placesNumber = :placesNumber,
 comfort = :comfort,
+visitNumber = :visitNumber,
 submissionDate = :submissionDate,
 validate = :validate
 WHERE placeId = :placeId
@@ -68,12 +69,13 @@ SQL;
             $parameters["latitude"] = $place->getLatitude();
             $parameters["schedules"] = htmlentities($place->getSchedules());
             $parameters["description"] = htmlentities($place->getDescription());
-            $parameters["coffee"] = $place->getCoffee() ? 1 : 0;
-            $parameters["internetAccess"] = $place->getInternetAccess() ? 1 : 0;
+            $parameters["coffee"] = ($place->getCoffee() ? 1 : 0);
+            $parameters["internetAccess"] = ($place->getInternetAccess() ? 1 : 0);
             $parameters["placesNumber"] = $place->getPlacesNumber();
             $parameters["comfort"] = $place->getComfort();
             $parameters["frequenting"] = $place->getFrequenting();
-            $parameters["submissionDate"] = $place->getSubmissionDate()->format("Y-m-d");
+            $parameters["visitNumber"] = $place->getVisitNumber();
+            $parameters["submissionDate"] = htmlentities($place->getSubmissionDate()->format("Y-m-d"));
             $parameters["validate"] = $place->getValidate();
             ///
 
