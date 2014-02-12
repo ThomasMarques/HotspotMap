@@ -1,9 +1,12 @@
 <?php
 
-namespace hotspotMap\Controller;
+namespace HotspotMap\Controller;
 
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use HotspotMap\model\User;
+use HotspotMap\View\ViewRenderer;
 
 class PlaceController
 {
@@ -15,7 +18,11 @@ class PlaceController
 
     public function getAction (Request $request, Application $app, $id)
     {
-        return "getAction";
+
+        $user = new User();
+        $user->setDisplayName("alexnadre");
+
+        return $app['renderer']->render(200, $user);
     }
 
     public function postAction (Request $request, Application $app)

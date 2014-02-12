@@ -2,9 +2,19 @@
 
 require_once __DIR__.'/../vendor/autoload.php';
 
-$app = new Silex\Application();
+use Symfony\Component\HttpFoundation\Request;
+use HotspotMap\View\Renderer\RendererFactory;
 
+$app = new Silex\Application();
+$app['mime-types'] = [ 'text/html', 'application/xml', 'application/json' ];
 $app['debug'] = true;
+
+/**
+ * Renderer
+ */
+$app['renderer'] = $app->share(function () use ($app) {
+    return new \HotspotMap\View\ViewRenderer($app, $_SERVER, new RendererFactory());
+});
 
 /*
  * Places Controller
@@ -19,3 +29,7 @@ $app->put('/places/{id}', 'HotspotMap\Controller\PlaceController::putAction')
     ->bind('place_put');
 $app->delete('/places/{id}', 'HotspotMap\Controller\PlaceController::deleteAction')
     ->bind('place_delete');
+
+$app->before(function(Request $request) use ($app) {
+
+});
