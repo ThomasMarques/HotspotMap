@@ -29,36 +29,41 @@ class PlaceMapperUnitTest extends \PHPUnit_Framework_TestCase
     public function testInsertPlace()
     {
         $place = new \hotspotMap\model\Place();
-        /// Insertion with null...
-
+        /// Insertion with null arguments (name, latitude, longitude)
+        //$place->setSchedules("07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00");
+        $place->setDescription("Good Starbuks with Wifi");
+        $place->setCoffee(true);
+        $place->setInternetAccess(true);
+        $place->setPlacesNumber(100);
+        $place->setComfort(4);
+        $place->setFrequenting(4);
+        $place->setSubmissionDate(new \DateTime());
+        $place->setValidate(0);
         $errors = self::$placeMapper->persist($place);
 
         $this->assertNotEmpty($errors);
         ///
 
-        /// Insertion with bad...
+        /// Insertion with bad location
+        $place->setName("Starbucks");
+        $place->setLongitude(200);
+        $place->setLatitude(-120);
         $errors = self::$placeMapper->persist($place);
 
         $this->assertNotEmpty($errors);
         ///
 
-        /// Insertion with good parameters...
+        /// Insertion with good parameters
+        $place->setLongitude(48.84951);
+        $place->setLatitude(2.29791);
         $errors = self::$placeMapper->persist($place);
 
         $this->assertEmpty($errors);
         $this->assertNotNull($place->getPlaceId());
         ///
-
-        /// Violated constraint ...
-        $place = new \hotspotMap\model\Place();
-
-        $errors = self::$userMapper->persist($place);
-
-        $this->assertNotEmpty($errors);
-        ///
     }
 
-    public function testUpdatePlace()
+    /*public function testUpdatePlace()
     {
         /// Insertion
         $place = new \hotspotMap\model\Place();
@@ -99,7 +104,7 @@ class PlaceMapperUnitTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEmpty($errors);
         ///
-    }
+    }*/
 
     protected function setUp()
     {
