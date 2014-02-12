@@ -23,7 +23,7 @@ class Place {
     /**
      * @var int
      */
-    private $intitude;
+    private $longitude;
 
     /**
      * @var string
@@ -66,7 +66,7 @@ class Place {
     private $visitNumber;
 
     /**
-     * @var date
+     * @var \DateTime
      */
     private $submissionDate;
 
@@ -77,6 +77,18 @@ class Place {
 
     public function __construct()
     {
+        $this->placeId = null;
+        $this->name = null;
+        $this->latitude = null;
+        $this->longitude = null;
+        $this->schedules = null;
+        $this->description = null;
+        $this->coffee = null;
+        $this->internetAccess = null;
+        $this->placesNumber = null;
+        $this->comfort = null;
+        $this->frequenting = null;
+        $this->visitNumber = null;
         $this->validate = false;
     }
 
@@ -257,7 +269,7 @@ class Place {
     }
 
     /**
-     * @param date $submissionDate
+     * @param \DateTime $submissionDate
      */
     public function setSubmissionDate($submissionDate)
     {
@@ -265,7 +277,7 @@ class Place {
     }
 
     /**
-     * @return date
+     * @return \DateTime
      */
     public function getSubmissionDate()
     {
