@@ -31,14 +31,14 @@ class CommentMapper
         if(empty($errors))
         {
             $parameters = [];
-            $isNew = null === $comment->getCommentId();
+            $isNew = (null == $comment->getCommentId());
             if($isNew)
             {
                 // Insert
                 $query = <<<SQL
 INSERT INTO comment
-(commentId)
-VALUES (NULL)
+(commentId, content, placeId, userId, displayName)
+VALUES (NULL, :content, :placeId, :userId, :displayName)
 SQL;
             }
             else
@@ -46,14 +46,20 @@ SQL;
                 // Update
                 $query = <<<SQL
 UPDATE Comment
-SET mailAddress = :mailAddress,
-WHERE userId = :userId
+SET content = :content,
+placeId = :placeId,
+userId = :userId,
+displayName = :displayName
+WHERE commentId = :commentId
 SQL;
                 $parameters["commentId"] = $comment->getCommentId();
             }
 
             /// Filling all parameters
-            $parameters[""] = htmlentities("");
+            $parameters["content"] = $comment->getContent();
+            $parameters["placeId"] = $comment->getPlaceId();
+            $parameters["userId"] = $comment->getUserId();
+            $parameters["displayName"] = $comment->getDisplayName();
             ///
 
             $success = $this->dal->executeQuery($query, $parameters);
@@ -61,7 +67,7 @@ SQL;
             {
                 if($isNew)
                 {
-                    $comment->setCommentId((int)$this->dal->lastInsertId());
+                    $comment->setCommentId(intval($this->dal->lastInsertId()));
                 }
             }
             else
@@ -81,7 +87,7 @@ SQL;
     {
         $errors = [];
 
-        if(null === $comment->getCommentId())
+        if(null == $comment->getCommentId())
         {
             $errors["id"] = "Missing Id";
         }
@@ -108,6 +114,25 @@ SQL;
     private function checkAttribute(\hotspotmap\model\Comment $comment)
     {
         $errors = [];
+
+        if(null == $comment->getContent() || strlen($comment->getContent()) < 1)
+        {
+            $errors["name"] = "The attribute content cannot be null or empty.";
+        }
+        if(null == $comment->getPlaceId())
+        {
+            $errors["placeId"] = "The attribute placeId cannot be null.";
+        }
+        if(null == $comment->getUserId() && null == $comment->getDisplayName())
+        {
+            $errors["userId"] = "The attribute userId cannot be null if the display name is null.";
+            $errors["displayName"] = "The attribute displayName cannot be null if the user id is null.";
+        }
+        if(null != $comment->getUserId() && null != $comment->getDisplayName())
+        {
+            $errors["userId"] = "The attribute userId must be null if the display name is not null.";
+            $errors["displayName"] = "The attribute displayName must be null if the user id is not null.";
+        }
 
         return $errors;
     }

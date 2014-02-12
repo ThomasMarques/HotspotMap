@@ -11,7 +11,7 @@ class Place {
     private $placeId;
 
     /**
-     * @var name
+     * @var string
      */
     private $name;
 

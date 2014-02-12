@@ -3,8 +3,8 @@
 namespace hotspotMap\service;
 
 require_once "../../../src/hotspotMap/service/UserMapper.php";
-require_once "../../../src/HotspotMap/service/DataAccessLayer.php";
-require_once "../../../src/HotspotMap/model/User.php";
+require_once "../../../src/hotspotMap/service/DataAccessLayer.php";
+require_once "../../../src/hotspotMap/model/User.php";
 
 class UserMapperUnitTest extends \PHPUnit_Framework_TestCase
 {

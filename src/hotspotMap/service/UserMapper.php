@@ -31,7 +31,7 @@ class UserMapper
         if(empty($errors))
         {
             $parameters = [];
-            $isNew = null === $user->getUserId();
+            $isNew = (null == $user->getUserId());
             if($isNew)
             {
                 // Insert
@@ -55,9 +55,9 @@ SQL;
             }
 
             /// Filling all parameters
-            $parameters["mailAddress"] = htmlentities($user->getMailAddress());
+            $parameters["mailAddress"] = $user->getMailAddress();
             $parameters["privilege"] = $user->getPrivilege();
-            $parameters["displayName"] = htmlentities($user->getDisplayName());
+            $parameters["displayName"] = $user->getDisplayName();
             ///
 
             $success = $this->dal->executeQuery($query, $parameters);
@@ -85,7 +85,7 @@ SQL;
     {
         $errors = [];
 
-        if(null === $user->getUserId())
+        if(null == $user->getUserId())
         {
             $errors["id"] = "Missing Id";
         }

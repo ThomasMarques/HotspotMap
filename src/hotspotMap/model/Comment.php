@@ -26,13 +26,17 @@ class Comment {
     private $userId;
 
     /**
-     * @var array Comment
+     * @var string
      */
-    private $comments= [];
+    private $displayName;
 
     public function __construct()
     {
-
+        $this->commentId = null;
+        $this->content = null;
+        $this->placeId = null;
+        $this->userId = null;
+        $this->displayName = null;
     }
 
     /**
@@ -100,34 +104,18 @@ class Comment {
     }
 
     /**
-     * @return array Comment
+     * @param string $displayName
      */
-    public function getComments()
+    public function setDisplayName($displayName)
     {
-        return $this->comments;
+        $this->displayName = $displayName;
     }
 
     /**
-     * @param Comment $comment
+     * @return string
      */
-    public function addComment(Comment $comment)
+    public function getDisplayName()
     {
-        $this->comments[] = $comment;
-    }
-
-    /**
-     * @param array $comments
-     */
-    public function addComments($comments = [])
-    {
-        foreach ($this->parameters as $value)
-        {
-            $this->addComment($value);
-        }
-    }
-
-    public function clearComments()
-    {
-        unset($this->comments);
+        return $this->displayName;
     }
 }

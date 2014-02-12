@@ -26,7 +26,21 @@ class DataAccessLayer extends \PDO
 
         foreach ($parameters as $name => $value)
         {
-            $stmt->bindValue(':' . $name, "'" . $value . "'");
+            if(is_numeric($value))
+            {
+                $paramType = \PDO::PARAM_INT;
+            }
+            elseif(is_null($value))
+            {
+                $paramType = \PDO::PARAM_NULL;
+            }
+            elseif(is_string($value))
+            {
+                $paramType = \PDO::PARAM_STR;
+            }
+
+            $stmt->bindValue(':' . $name, $value,$paramType);
+            print ':' . $name . " -> " . $value . " \\ " .$paramType . "\n";
         }
 
         return $stmt->execute();

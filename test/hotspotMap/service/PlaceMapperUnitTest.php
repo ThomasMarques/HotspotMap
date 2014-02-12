@@ -3,8 +3,8 @@
 namespace hotspotMap\service;
 
 require_once "../../../src/hotspotMap/service/PlaceMapper.php";
-require_once "../../../src/HotspotMap/service/DataAccessLayer.php";
-require_once "../../../src/HotspotMap/model/Place.php";
+require_once "../../../src/hotspotMap/service/DataAccessLayer.php";
+require_once "../../../src/hotspotMap/model/Place.php";
 
 class PlaceMapperUnitTest extends \PHPUnit_Framework_TestCase
 {
@@ -38,6 +38,7 @@ class PlaceMapperUnitTest extends \PHPUnit_Framework_TestCase
         $place->setComfort(4);
         $place->setFrequenting(4);
         $place->setSubmissionDate(new \DateTime());
+        $place->setVisitNumber(0);
         $place->setValidate(0);
         $errors = self::$placeMapper->persist($place);
 
@@ -58,8 +59,6 @@ class PlaceMapperUnitTest extends \PHPUnit_Framework_TestCase
         $place->setLatitude(2.29791);
         $errors = self::$placeMapper->persist($place);
 
-        print_r($errors);
-
         $this->assertEmpty($errors);
         $this->assertNotNull($place->getPlaceId());
         ///
@@ -78,6 +77,7 @@ class PlaceMapperUnitTest extends \PHPUnit_Framework_TestCase
         $place->setComfort(4);
         $place->setFrequenting(4);
         $place->setSubmissionDate(new \DateTime());
+        $place->setVisitNumber(0);
         $place->setValidate(0);
         self::$placeMapper->persist($place);
         ///
@@ -114,6 +114,7 @@ class PlaceMapperUnitTest extends \PHPUnit_Framework_TestCase
         $place->setComfort(4);
         $place->setFrequenting(4);
         $place->setSubmissionDate(new \DateTime());
+        $place->setVisitNumber(0);
         $place->setValidate(0);
         self::$placeMapper->persist($place);
         ///

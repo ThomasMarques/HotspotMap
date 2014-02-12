@@ -31,7 +31,7 @@ class PlaceMapper
         if(empty($errors))
         {
             $parameters = [];
-            $isNew = null === $place->getPlaceId();
+            $isNew = (null == $place->getPlaceId());
             if($isNew)
             {
                 // Insert
@@ -64,18 +64,18 @@ SQL;
             }
 
             /// Filling all parameters
-            $parameters["name"] = htmlentities($place->getName());
+            $parameters["name"] = $place->getName();
             $parameters["longitude"] = $place->getLongitude();
             $parameters["latitude"] = $place->getLatitude();
-            $parameters["schedules"] = htmlentities($place->getSchedules());
-            $parameters["description"] = htmlentities($place->getDescription());
+            $parameters["schedules"] = $place->getSchedules();
+            $parameters["description"] = $place->getDescription();
             $parameters["coffee"] = ($place->getCoffee() ? 1 : 0);
             $parameters["internetAccess"] = ($place->getInternetAccess() ? 1 : 0);
             $parameters["placesNumber"] = $place->getPlacesNumber();
             $parameters["comfort"] = $place->getComfort();
             $parameters["frequenting"] = $place->getFrequenting();
             $parameters["visitNumber"] = $place->getVisitNumber();
-            $parameters["submissionDate"] = htmlentities($place->getSubmissionDate()->format("Y-m-d"));
+            $parameters["submissionDate"] = $place->getSubmissionDate()->format("Y-m-d");
             $parameters["validate"] = $place->getValidate();
             ///
 
@@ -84,7 +84,7 @@ SQL;
             {
                 if($isNew)
                 {
-                    $place->setPlaceId((int)$this->dal->lastInsertId());
+                    $place->setPlaceId(intval($this->dal->lastInsertId()));
                 }
             }
             else
@@ -104,7 +104,7 @@ SQL;
     {
         $errors = [];
 
-        if(null === $place->getPlaceId())
+        if(null == $place->getPlaceId())
         {
             $errors["id"] = "Missing Id";
         }
@@ -132,15 +132,15 @@ SQL;
     {
         $errors = [];
 
-        if(null === $place->getName() || strlen($place->getName()) < 1)
+        if(null == $place->getName() || strlen($place->getName()) < 1)
         {
             $errors["name"] = "The attribute name cannot be null or empty.";
         }
-        if(null === $place->getLatitude() || $place->getLatitude() < -90 || $place->getLatitude() > 90)
+        if(null == $place->getLatitude() || $place->getLatitude() < -90 || $place->getLatitude() > 90)
         {
             $errors["latitude"] = "The latitude must be between -90 and 90.";
         }
-        if(null === $place->getLongitude() || $place->getLongitude() < -180 || $place->getLongitude() > 180)
+        if(null == $place->getLongitude() || $place->getLongitude() < -180 || $place->getLongitude() > 180)
         {
             $errors["longitude"] = "The latitude must be between -180 and 180.";
         }

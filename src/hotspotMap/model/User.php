@@ -31,11 +31,6 @@ class User {
      */
     private $displayName;
 
-    /**
-     * @var array Comment
-     */
-    private $comments= [];
-
     public function __construct()
     {
         $this->userId = null;
@@ -106,37 +101,5 @@ class User {
     public function setDisplayName($displayName)
     {
         $this->displayName = $displayName;
-    }
-
-    /**
-     * @return array Comment
-     */
-    public function getComments()
-    {
-        return $this->comments;
-    }
-
-    /**
-     * @param Comment $comment
-     */
-    public function addComment(Comment $comment)
-    {
-        $this->comments[] = $comment;
-    }
-
-    /**
-     * @param array $comments
-     */
-    public function addComments($comments = [])
-    {
-        foreach ($this->parameters as $value)
-        {
-            $this->addComment($value);
-        }
-    }
-
-    public function clearComments()
-    {
-        unset($this->comments);
     }
 } 
