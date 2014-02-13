@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS `comment` (
   `content` varchar(200) NOT NULL,
   `placeId` bigint(20) NOT NULL,
   `userId` bigint(20) DEFAULT NULL,
-  `displayName` varchar(50) DEFAULT NULL,
+  `authorDisplayName` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`commentId`),
   KEY `userId` (`userId`),
   KEY `placeId` (`placeId`)

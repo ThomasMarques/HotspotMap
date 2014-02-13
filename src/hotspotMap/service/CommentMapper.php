@@ -37,8 +37,8 @@ class CommentMapper
                 // Insert
                 $query = <<<SQL
 INSERT INTO comment
-(commentId, content, placeId, userId, displayName)
-VALUES (NULL, :content, :placeId, :userId, :displayName)
+(commentId, content, placeId, userId, authorDisplayName)
+VALUES (NULL, :content, :placeId, :userId, :authorDisplayName)
 SQL;
             }
             else
@@ -49,7 +49,7 @@ UPDATE Comment
 SET content = :content,
 placeId = :placeId,
 userId = :userId,
-displayName = :displayName
+authorDisplayName = :authorDisplayName
 WHERE commentId = :commentId
 SQL;
                 $parameters["commentId"] = $comment->getCommentId();
@@ -59,7 +59,7 @@ SQL;
             $parameters["content"] = $comment->getContent();
             $parameters["placeId"] = $comment->getPlaceId();
             $parameters["userId"] = $comment->getUserId();
-            $parameters["displayName"] = $comment->getDisplayName();
+            $parameters["authorDisplayName"] = $comment->getAuthorDisplayName();
             ///
 
             $success = $this->dal->executeQuery($query, $parameters);
@@ -123,12 +123,12 @@ SQL;
         {
             $errors["placeId"] = "The attribute placeId cannot be null.";
         }
-        if(null == $comment->getUserId() && null == $comment->getDisplayName())
+        if(null == $comment->getUserId() && null == $comment->getAuthorDisplayName())
         {
             $errors["userId"] = "The attribute userId cannot be null if the display name is null.";
             $errors["displayName"] = "The attribute displayName cannot be null if the user id is null.";
         }
-        if(null != $comment->getUserId() && null != $comment->getDisplayName())
+        if(null != $comment->getUserId() && null != $comment->getAuthorDisplayName())
         {
             $errors["userId"] = "The attribute userId must be null if the display name is not null.";
             $errors["displayName"] = "The attribute displayName must be null if the user id is not null.";

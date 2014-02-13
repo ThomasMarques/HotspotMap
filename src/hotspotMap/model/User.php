@@ -36,7 +36,7 @@ class User {
         $this->userId = null;
         $this->mailAddress = null;
         $this->privilege = null;
-        $this->displayName = null;
+        $this->authorDisplayName = null;
     }
 
     /**
@@ -56,7 +56,7 @@ class User {
     }
 
     /**
-     * @return enum Privilege (int)
+     * @return int Privilege
      */
     public function getPrivilege()
     {

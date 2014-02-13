@@ -90,7 +90,7 @@ class CommentMapperUnitTest extends \PHPUnit_Framework_TestCase
 
         /// Insertion with userId and displayName (Not permitted)
         $comment->setContent("My content");
-        $comment->setDisplayName("Batman");
+        $comment->setAuthorDisplayName("Batman");
         $comment->setUserId($userId);
         $errors = self::$commentMapper->persist($comment);
 
@@ -99,7 +99,7 @@ class CommentMapperUnitTest extends \PHPUnit_Framework_TestCase
 
         /// Insertion with only displayName
         $comment->setUserId(null);
-        $comment->setDisplayName("Batman");
+        $comment->setAuthorDisplayName("Batman");
         $errors = self::$commentMapper->persist($comment);
 
         $this->assertEmpty($errors);
@@ -109,7 +109,7 @@ class CommentMapperUnitTest extends \PHPUnit_Framework_TestCase
         /// Insertion with only userId
         $comment->setCommentId(null);
         $comment->setUserId($userId);
-        $comment->setDisplayName(null);
+        $comment->setAuthorDisplayName(null);
         $errors = self::$commentMapper->persist($comment);
 
         $this->assertEmpty($errors);
@@ -124,20 +124,20 @@ class CommentMapperUnitTest extends \PHPUnit_Framework_TestCase
         $comment = new \hotspotMap\model\Comment();
         $comment->setContent("My content");
         $comment->setPlaceId($placeId);
-        $comment->setDisplayName("Batman");
+        $comment->setAuthorDisplayName("Batman");
         self::$commentMapper->persist($comment);
         ///
 
         /// Bad update with bad
         $comment->setContent(null);
-        $comment->setDisplayName(null);
+        $comment->setAuthorDisplayName(null);
         $errors = self::$commentMapper->persist($comment);
         $this->assertNotEmpty($errors);
         ///
 
         /// Update with good
         $comment->setContent("My content");
-        $comment->setDisplayName("Batman");
+        $comment->setAuthorDisplayName("Batman");
         $errors = self::$commentMapper->persist($comment);
 
         $this->assertEmpty($errors);
@@ -151,7 +151,7 @@ class CommentMapperUnitTest extends \PHPUnit_Framework_TestCase
         $comment = new \hotspotMap\model\Comment();
         $comment->setContent("My content");
         $comment->setPlaceId($placeId);
-        $comment->setDisplayName("Batman");
+        $comment->setAuthorDisplayName("Batman");
         self::$commentMapper->persist($comment);
         ///
 

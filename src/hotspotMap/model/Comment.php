@@ -28,7 +28,7 @@ class Comment {
     /**
      * @var string
      */
-    private $displayName;
+    private $authorDisplayName;
 
     public function __construct()
     {
@@ -36,7 +36,7 @@ class Comment {
         $this->content = null;
         $this->placeId = null;
         $this->userId = null;
-        $this->displayName = null;
+        $this->authorDisplayName = null;
     }
 
     /**
@@ -104,18 +104,18 @@ class Comment {
     }
 
     /**
-     * @param string $displayName
+     * @param string $authorDisplayName
      */
-    public function setDisplayName($displayName)
+    public function setAuthorDisplayName($authorDisplayName)
     {
-        $this->displayName = $displayName;
+        $this->authorDisplayName = $authorDisplayName;
     }
 
     /**
      * @return string
      */
-    public function getDisplayName()
+    public function getAuthorDisplayName()
     {
-        return $this->displayName;
+        return $this->authorDisplayName;
     }
 }
