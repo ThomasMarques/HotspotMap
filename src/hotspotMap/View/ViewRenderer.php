@@ -1,12 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alexandre
- * Date: 12/02/14
- * Time: 12:38
- */
 
-namespace hotspotMap\View;
+namespace HotspotMap\View;
 
 use Symfony\Component\HttpFoundation\Response;
 use Negotiation\Negotiator;
