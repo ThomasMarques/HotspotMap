@@ -1,9 +1,9 @@
 <?php
 
-namespace HotspotMap\service;
+namespace HotspotMap\dal\MySqlImplementation;
 
 
-class DataAccessLayer extends \PDO
+class Connexion extends \PDO
 {
     /**
      * @param string $dsn
@@ -18,7 +18,7 @@ class DataAccessLayer extends \PDO
     /**
      * @param string $query
      * @param array $parameters
-     * @return bool Returns `true`on success, `false`otherwise
+     * @return bool Returns `true` on success, `false` otherwise
      */
     public function executeQuery($query, array $parameters = [])
     {

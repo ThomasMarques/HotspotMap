@@ -1,21 +1,21 @@
 <?php
 
-namespace hotspotMap\service;
+namespace HotspotMap\dal\MySqlImplementation;
 
-require_once __DIR__ . "/../model/Place.php";
+require_once __DIR__ . "/../../model/Place.php";
+require_once __DIR__ . "/../IPlaceMapper.php";
 
-class PlaceMapper
+class MySqlPlaceMapper extends \HotspotMap\dal\IPlaceMapper
 {
-
     /**
-     * @var DataAccessLayer
+     * @var Connexion
      */
     private $dal;
 
     /**
-     * @param DataAccessLayer $dal
+     * @param Connexion $dal
      */
-    public function __construct(DataAccessLayer $dal)
+    public function __construct(Connexion $dal)
     {
         $this->dal = $dal;
     }
@@ -121,34 +121,6 @@ SQL;
                 $errors = $this->dal->errorInfo();
             }
         }
-        return $errors;
-    }
-
-    /**
-     * @param \hotspotmap\model\Place $place
-     * @return array
-     */
-    private function checkAttribute(\hotspotmap\model\Place $place)
-    {
-        $errors = [];
-
-        if(null == $place->getName() || strlen($place->getName()) < 1)
-        {
-            $errors["name"] = "The attribute name cannot be null or empty.";
-        }
-        if(null == $place->getLatitude() || $place->getLatitude() < -90 || $place->getLatitude() > 90)
-        {
-            $errors["latitude"] = "The latitude must be between -90 and 90.";
-        }
-        if(null == $place->getLongitude() || $place->getLongitude() < -180 || $place->getLongitude() > 180)
-        {
-            $errors["longitude"] = "The latitude must be between -180 and 180.";
-        }
-        if(null == $place->getSchedules() || strlen($place->getSchedules()) < 1)
-        {
-            $errors["schedules"] = "The schedules cannot be null or empty.";
-        }
-
         return $errors;
     }
 } 

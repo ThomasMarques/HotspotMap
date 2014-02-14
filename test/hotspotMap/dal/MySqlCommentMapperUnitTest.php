@@ -1,30 +1,48 @@
 <?php
 
-namespace hotspotMap\service;
+namespace HotspotMap\dal;
 
-require_once "../../../src/hotspotMap/service/DataAccessLayer.php";
-require_once "../../../src/hotspotMap/service/CommentMapper.php";
-require_once "../../../src/hotspotMap/service/PlaceMapper.php";
-require_once "../../../src/hotspotMap/service/UserMapper.php";
+require_once "../../../src/hotspotMap/dal/MySqlImplementation/Connexion.php";
+require_once "../../../src/hotspotMap/dal/ICommentMapper.php";
+require_once "../../../src/hotspotMap/dal/IPlaceMapper.php";
+require_once "../../../src/hotspotMap/dal/IUserMapper.php";
+require_once "../../../src/hotspotMap/dal/MySqlImplementation/MySqlCommentMapper.php";
+require_once "../../../src/hotspotMap/dal/MySqlImplementation/MySqlPlaceMapper.php";
+require_once "../../../src/hotspotMap/dal/MySqlImplementation/MySqlUserMapper.php";
 require_once "../../../src/hotspotMap/model/Comment.php";
 require_once "../../../src/hotspotMap/model/Place.php";
 require_once "../../../src/hotspotMap/model/User.php";
 
-class CommentMapperUnitTest extends \PHPUnit_Framework_TestCase
+class MySqlCommentMapperUnitTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var Connexion
+     */
     protected static $dal;
+
+    /**
+     * @var ICommentMapper
+     */
     protected static $commentMapper;
+
+    /**
+     * @var IPlaceMapper
+     */
     protected static $placeMapper;
+
+    /**
+     * @var IUserMapper
+     */
     protected static $userMapper;
 
     public static function setUpBeforeClass()
     {
         /// Objects construction
         /// Connexion to the database for tests
-        self::$dal = new DataAccessLayer("mysql:host=localhost;dbname=hotspotmaptest", "root", "");
-        self::$commentMapper  = new CommentMapper(self::$dal);
-        self::$placeMapper = new PlaceMapper(self::$dal);
-        self::$userMapper = new UserMapper(self::$dal);
+        self::$dal = new \HotspotMap\dal\MySqlImplementation\Connexion("mysql:host=localhost;dbname=hotspotmaptest", "root", "");
+        self::$commentMapper  = new \HotspotMap\dal\MySqlImplementation\MySqlCommentMapper(self::$dal);
+        self::$placeMapper = new \HotspotMap\dal\MySqlImplementation\MySqlPlaceMapper(self::$dal);
+        self::$userMapper = new \HotspotMap\dal\MySqlImplementation\MySqlUserMapper(self::$dal);
     }
 
     public static function tearDownAfterClass()

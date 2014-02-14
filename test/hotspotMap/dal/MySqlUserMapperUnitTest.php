@@ -1,22 +1,30 @@
 <?php
 
-namespace hotspotMap\service;
+namespace HotspotMap\dal;
 
-require_once "../../../src/hotspotMap/service/UserMapper.php";
-require_once "../../../src/hotspotMap/service/DataAccessLayer.php";
+require_once "../../../src/hotspotMap/dal/MySqlImplementation/MySqlUserMapper.php";
+require_once "../../../src/hotspotMap/dal/IUserMapper.php";
+require_once "../../../src/hotspotMap/dal/MySqlImplementation/Connexion.php";
 require_once "../../../src/hotspotMap/model/User.php";
 
-class UserMapperUnitTest extends \PHPUnit_Framework_TestCase
+class MySqlUserMapperUnitTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var Connexion
+     */
     protected static $dal;
+
+    /**
+     * @var IUserMapper
+     */
     protected static $userMapper;
 
     public static function setUpBeforeClass()
     {
         /// Objects construction
         /// Connexion to the database for tests
-        self::$dal = new DataAccessLayer("mysql:host=localhost;dbname=hotspotmaptest", "root", "");
-        self::$userMapper  = new UserMapper(self::$dal);
+        self::$dal = new \HotspotMap\dal\MySqlImplementation\Connexion("mysql:host=localhost;dbname=hotspotmaptest", "root", "");
+        self::$userMapper  = new \HotspotMap\dal\MySqlImplementation\MySqlUserMapper(self::$dal);
     }
 
     public static function tearDownAfterClass()

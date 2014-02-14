@@ -1,21 +1,22 @@
 <?php
 
-namespace hotspotMap\service;
+namespace HotspotMap\dal\MySqlImplementation;
 
-require_once __DIR__ . "/../model/Comment.php";
+require_once __DIR__ . "/../../model/Comment.php";
+require_once __DIR__ . "/../ICommentMapper.php";
 
-class CommentMapper
+class MySqlCommentMapper extends \HotspotMap\dal\ICommentMapper
 {
 
     /**
-     * @var DataAccessLayer
+     * @var Connexion
      */
     private $dal;
 
     /**
-     * @param DataAccessLayer $dal
+     * @param Connexion $dal
      */
-    public function __construct(DataAccessLayer $dal)
+    public function __construct(Connexion $dal)
     {
         $this->dal = $dal;
     }
@@ -104,36 +105,6 @@ SQL;
                 $errors = $this->dal->errorInfo();
             }
         }
-        return $errors;
-    }
-
-    /**
-     * @param \hotspotmap\model\Comment $comment
-     * @return array
-     */
-    private function checkAttribute(\hotspotmap\model\Comment $comment)
-    {
-        $errors = [];
-
-        if(null == $comment->getContent() || strlen($comment->getContent()) < 1)
-        {
-            $errors["name"] = "The attribute content cannot be null or empty.";
-        }
-        if(null == $comment->getPlaceId())
-        {
-            $errors["placeId"] = "The attribute placeId cannot be null.";
-        }
-        if(null == $comment->getUserId() && null == $comment->getAuthorDisplayName())
-        {
-            $errors["userId"] = "The attribute userId cannot be null if the display name is null.";
-            $errors["displayName"] = "The attribute displayName cannot be null if the user id is null.";
-        }
-        if(null != $comment->getUserId() && null != $comment->getAuthorDisplayName())
-        {
-            $errors["userId"] = "The attribute userId must be null if the display name is not null.";
-            $errors["displayName"] = "The attribute displayName must be null if the user id is not null.";
-        }
-
         return $errors;
     }
 } 

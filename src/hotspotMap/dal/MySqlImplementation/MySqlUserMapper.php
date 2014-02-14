@@ -1,21 +1,21 @@
 <?php
 
-namespace hotspotMap\service;
+namespace HotspotMap\dal\MySqlImplementation;
 
-require_once __DIR__ . "/../model/User.php";
+require_once __DIR__ . "/../../model/User.php";
+require_once __DIR__ . "/../IUserMapper.php";
 
-class UserMapper
+class MySqlUserMapper extends \HotspotMap\dal\IUserMapper
 {
-
     /**
-     * @var DataAccessLayer
+     * @var Connexion
      */
     private $dal;
 
     /**
-     * @param DataAccessLayer $dal
+     * @param Connexion $dal
      */
-    public function __construct(DataAccessLayer $dal)
+    public function __construct(Connexion $dal)
     {
         $this->dal = $dal;
     }
@@ -102,22 +102,6 @@ SQL;
                 $errors = $this->dal->errorInfo();
             }
         }
-        return $errors;
-    }
-
-    /**
-     * @param \hotspotmap\model\User $user
-     * @return array
-     */
-    private function checkAttribute(\hotspotmap\model\User $user)
-    {
-        $errors = [];
-
-        if(!filter_var($user->getMailAddress(), FILTER_VALIDATE_EMAIL))
-        {
-            $errors["mailAddress"] = "mail incorrect";
-        }
-
         return $errors;
     }
 }
