@@ -6,22 +6,22 @@ namespace HotspotMap\dal;
 abstract class IPlaceMapper
 {
     /**
-     * @param \hotspotmap\model\Place $place
+     * @param \Hotspotmap\model\Place $place
      * @return array
      */
-    abstract public function persist(\hotspotmap\model\Place $place);
+    abstract public function persist(\Hotspotmap\model\Place $place);
 
     /**
-     * @param \hotspotmap\model\Place $place
+     * @param \Hotspotmap\model\Place $place
      * @return array
      */
-    abstract public function remove(\hotspotmap\model\Place $place);
+    abstract public function remove(\Hotspotmap\model\Place $place);
 
     /**
-     * @param \hotspotmap\model\Place $place
+     * @param \Hotspotmap\model\Place $place
      * @return array
      */
-    protected function checkAttribute(\hotspotmap\model\Place $place)
+    protected function checkAttribute(\Hotspotmap\model\Place $place)
     {
         $errors = [];
 

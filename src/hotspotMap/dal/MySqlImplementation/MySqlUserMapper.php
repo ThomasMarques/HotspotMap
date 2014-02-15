@@ -10,21 +10,21 @@ class MySqlUserMapper extends \HotspotMap\dal\IUserMapper
     /**
      * @var Connexion
      */
-    private $dal;
+    private $connexion;
 
     /**
-     * @param Connexion $dal
+     * @param Connexion $connexion
      */
-    public function __construct(Connexion $dal)
+    public function __construct(Connexion $connexion)
     {
-        $this->dal = $dal;
+        $this->connexion = $connexion;
     }
 
     /**
-     * @param \hotspotmap\model\User $user
+     * @param \Hotspotmap\model\User $user
      * @return array
      */
-    public function persist(\hotspotmap\model\User $user)
+    public function persist(\Hotspotmap\model\User $user)
     {
         $errors = $this->checkAttribute($user);
 
@@ -60,17 +60,17 @@ SQL;
             $parameters["displayName"] = $user->getDisplayName();
             ///
 
-            $success = $this->dal->executeQuery($query, $parameters);
+            $success = $this->connexion->executeQuery($query, $parameters);
             if($success)
             {
                 if($isNew)
                 {
-                    $user->setUserId((int)$this->dal->lastInsertId());
+                    $user->setUserId((int)$this->connexion->lastInsertId());
                 }
             }
             else
             {
-                $errors = $this->dal->errorInfo();
+                $errors = $this->connexion->errorInfo();
             }
         }
 
@@ -78,10 +78,10 @@ SQL;
     }
 
     /**
-     * @param \hotspotmap\model\User $user
+     * @param \Hotspotmap\model\User $user
      * @return array
      */
-    public function remove(\hotspotmap\model\User $user)
+    public function remove(\Hotspotmap\model\User $user)
     {
         $errors = [];
 
@@ -97,9 +97,9 @@ DELETE FROM User
 WHERE userId = :userId
 SQL;
             $parameters["userId"] = $user->getUserId();
-            if(!$this->dal->executeQuery($query, $parameters))
+            if(!$this->connexion->executeQuery($query, $parameters))
             {
-                $errors = $this->dal->errorInfo();
+                $errors = $this->connexion->errorInfo();
             }
         }
         return $errors;

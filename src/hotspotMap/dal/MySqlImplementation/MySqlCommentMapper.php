@@ -11,21 +11,21 @@ class MySqlCommentMapper extends \HotspotMap\dal\ICommentMapper
     /**
      * @var Connexion
      */
-    private $dal;
+    private $connexion;
 
     /**
-     * @param Connexion $dal
+     * @param Connexion $connexion
      */
-    public function __construct(Connexion $dal)
+    public function __construct(Connexion $connexion)
     {
-        $this->dal = $dal;
+        $this->connexion = $connexion;
     }
 
     /**
-     * @param \hotspotmap\model\Comment $comment
+     * @param \Hotspotmap\model\Comment $comment
      * @return array
      */
-    public function persist(\hotspotmap\model\Comment $comment)
+    public function persist(\Hotspotmap\model\Comment $comment)
     {
         $errors = $this->checkAttribute($comment);
 
@@ -63,17 +63,17 @@ SQL;
             $parameters["authorDisplayName"] = $comment->getAuthorDisplayName();
             ///
 
-            $success = $this->dal->executeQuery($query, $parameters);
+            $success = $this->connexion->executeQuery($query, $parameters);
             if($success)
             {
                 if($isNew)
                 {
-                    $comment->setCommentId(intval($this->dal->lastInsertId()));
+                    $comment->setCommentId(intval($this->connexion->lastInsertId()));
                 }
             }
             else
             {
-                $errors = $this->dal->errorInfo();
+                $errors = $this->connexion->errorInfo();
             }
         }
 
@@ -81,10 +81,10 @@ SQL;
     }
 
     /**
-     * @param \hotspotmap\model\Comment $comment
+     * @param \Hotspotmap\model\Comment $comment
      * @return array
      */
-    public function remove(\hotspotmap\model\Comment $comment)
+    public function remove(\Hotspotmap\model\Comment $comment)
     {
         $errors = [];
 
@@ -100,9 +100,9 @@ DELETE FROM Comment
 WHERE commentId = :commentId
 SQL;
             $parameters["commentId"] = $comment->getCommentId();
-            if(!$this->dal->executeQuery($query, $parameters))
+            if(!$this->connexion->executeQuery($query, $parameters))
             {
-                $errors = $this->dal->errorInfo();
+                $errors = $this->connexion->errorInfo();
             }
         }
         return $errors;

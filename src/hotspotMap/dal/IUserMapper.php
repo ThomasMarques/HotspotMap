@@ -6,22 +6,22 @@ namespace HotspotMap\dal;
 abstract class IUserMapper
 {
     /**
-     * @param \hotspotmap\model\User $user
+     * @param \Hotspotmap\model\User $user
      * @return array
      */
-    abstract public function persist(\hotspotmap\model\User $user);
+    abstract public function persist(\Hotspotmap\model\User $user);
 
     /**
-     * @param \hotspotmap\model\User $user
+     * @param \Hotspotmap\model\User $user
      * @return array
      */
-    abstract public function remove(\hotspotmap\model\User $user);
+    abstract public function remove(\Hotspotmap\model\User $user);
 
     /**
-     * @param \hotspotmap\model\User $user
+     * @param \Hotspotmap\model\User $user
      * @return array
      */
-    protected function checkAttribute(\hotspotmap\model\User $user)
+    protected function checkAttribute(\Hotspotmap\model\User $user)
     {
         $errors = [];
 

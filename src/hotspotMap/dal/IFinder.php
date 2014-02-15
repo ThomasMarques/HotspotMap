@@ -25,10 +25,12 @@ interface IFinder {
      * @param string $condition
      *      - Available comparators : = < > <= >= <> LIKE
      *      - Available operators : or and not
-     *      example : " user.mail <> 'notexcepted@mail.com' or place.name LIKE 'starting_name%' "
+     *      example : " user.mail <> :mail or place.name LIKE :placeName "
+     * @param $params
+     *      example : ["mail" => "notexcepted@mail.com", "placeName" => "starting_name%"]
      * @return IFinder
      */
-    public function where($condition);
+    public function where($condition, $params);
 
     /**
      * @param array $fields

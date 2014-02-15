@@ -2,36 +2,33 @@
 
 namespace HotspotMap\dal;
 
-require_once "../../../src/hotspotMap/dal/MySqlImplementation/MySqlUserMapper.php";
-require_once "../../../src/hotspotMap/dal/IUserMapper.php";
-require_once "../../../src/hotspotMap/dal/MySqlImplementation/Connexion.php";
+require_once "../../../src/hotspotMap/dal/DALFactory.php";
 require_once "../../../src/hotspotMap/model/User.php";
 
-class MySqlUserMapperUnitTest extends \PHPUnit_Framework_TestCase
+class UserMapperUnitTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var Connexion
+     * @var UserRepository
      */
-    protected static $dal;
+    protected static $userRepository;
 
     /**
-     * @var IUserMapper
+     * @var Connection
      */
-    protected static $userMapper;
+    protected static $connexion;
 
     public static function setUpBeforeClass()
     {
         /// Objects construction
-        /// Connexion to the database for tests
-        self::$dal = new \HotspotMap\dal\MySqlImplementation\Connexion("mysql:host=localhost;dbname=hotspotmaptest", "root", "");
-        self::$userMapper  = new \HotspotMap\dal\MySqlImplementation\MySqlUserMapper(self::$dal);
+        self::$connexion = \HotspotMap\dal\DALFactory::getConnexion();
+        self::$userRepository = \HotspotMap\dal\DALFactory::getRepository("User");
     }
 
     public static function tearDownAfterClass()
     {
         /// Objects destruction
-        self::$dal = NULL;
-        self::$userMapper = NULL;
+        self::$userRepository = NULL;
+        self::$connexion = NULL;
     }
 
     public function testInsertUser()
@@ -40,21 +37,21 @@ class MySqlUserMapperUnitTest extends \PHPUnit_Framework_TestCase
         /// Insertion with null address
         $user->setPrivilege(0);
         $user->setDisplayName("Display Name");
-        $errors = self::$userMapper->persist($user);
+        $errors = self::$userRepository->save($user);
 
         $this->assertNotEmpty($errors);
         ///
 
         /// Insertion with bad address
         $user->setMailAddress("bad@address");
-        $errors = self::$userMapper->persist($user);
+        $errors = self::$userRepository->save($user);
 
         $this->assertNotEmpty($errors);
         ///
 
         /// Insertion with good parameters
         $user->setMailAddress("good@address.fr");
-        $errors = self::$userMapper->persist($user);
+        $errors = self::$userRepository->save($user);
 
         $this->assertEmpty($errors);
         $this->assertNotNull($user->getUserId());
@@ -65,7 +62,7 @@ class MySqlUserMapperUnitTest extends \PHPUnit_Framework_TestCase
         $user->setMailAddress("good@address.fr");
         $user->setPrivilege(0);
         $user->setDisplayName("Display Name");
-        $errors = self::$userMapper->persist($user);
+        $errors = self::$userRepository->save($user);
 
         $this->assertNotEmpty($errors);
         ///
@@ -78,19 +75,19 @@ class MySqlUserMapperUnitTest extends \PHPUnit_Framework_TestCase
         $user->setPrivilege(0);
         $user->setDisplayName("Display Name");
         $user->setMailAddress("good@address.fr");
-        self::$userMapper->persist($user);
+        self::$userRepository->save($user);
         ///
 
         /// Bad update with bad mail
         $user->setMailAddress("bad@address");
-        $errors = self::$userMapper->persist($user);
+        $errors = self::$userRepository->save($user);
 
         $this->assertNotEmpty($errors);
         ///
 
         /// Update with good parameters
         $user->setMailAddress("othergood@address.com");
-        $errors = self::$userMapper->persist($user);
+        $errors = self::$userRepository->save($user);
 
         $this->assertEmpty($errors);
         ///
@@ -103,20 +100,20 @@ class MySqlUserMapperUnitTest extends \PHPUnit_Framework_TestCase
         $user->setPrivilege(0);
         $user->setDisplayName("Display Name");
         $user->setMailAddress("good@address.fr");
-        self::$userMapper->persist($user);
+        self::$userRepository->save($user);
         ///
 
         /// Removing test with null id
         $userId = $user->getUserId();
         $user->setUserId(null);
-        $errors = self::$userMapper->remove($user);
+        $errors = self::$userRepository->remove($user);
 
         $this->assertNotEmpty($errors);
         ///
 
         /// Removing test with null id
         $user->setUserId($userId);
-        $errors = self::$userMapper->remove($user);
+        $errors = self::$userRepository->remove($user);
 
         $this->assertEmpty($errors);
         ///
@@ -125,12 +122,12 @@ class MySqlUserMapperUnitTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         /// Begin transaction
-        self::$dal->beginTransaction();
+        self::$connexion->beginTransaction();
     }
 
     protected function tearDown()
     {
         /// RollBack
-        self::$dal->rollBack();
+        self::$connexion->rollBack();
     }
 } 

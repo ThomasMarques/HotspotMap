@@ -7,22 +7,22 @@ abstract class ICommentMapper
 {
 
     /**
-     * @param \hotspotmap\model\Comment $comment
+     * @param \Hotspotmap\model\Comment $comment
      * @return array
      */
-    abstract public function persist(\hotspotmap\model\Comment $comment);
+    abstract public function persist(\Hotspotmap\model\Comment $comment);
 
     /**
-     * @param \hotspotmap\model\Comment $comment
+     * @param \Hotspotmap\model\Comment $comment
      * @return array
      */
-    abstract public function remove(\hotspotmap\model\Comment $comment);
+    abstract public function remove(\Hotspotmap\model\Comment $comment);
 
     /**
-     * @param \hotspotmap\model\Comment $comment
+     * @param \Hotspotmap\model\Comment $comment
      * @return array
      */
-    protected function checkAttribute(\hotspotmap\model\Comment $comment)
+    protected function checkAttribute(\Hotspotmap\model\Comment $comment)
     {
         $errors = [];
 

@@ -2,10 +2,28 @@
 
 namespace HotspotMap\dal\MySqlImplementation;
 
-require_once "IFinder.php";
+require_once __DIR__ . "/../IFinder.php";
 
-class MySqlFinder implements HotspotMap\dal\IFinder
+class MySqlFinder implements \HotspotMap\dal\IFinder
 {
+    /**
+     * @var array
+     */
+    private $parameters = [];
+
+    /**
+     * @var Connexion
+     */
+    private $connexion;
+
+    /**
+     * @param Connexion $connexion
+     */
+    public function __construct(Connexion $connexion)
+    {
+        $this->connexion = $connexion;
+    }
+
     /**
      * @param array $fieldsArray
      *      string array
@@ -32,10 +50,12 @@ class MySqlFinder implements HotspotMap\dal\IFinder
      * @param string $condition
      *      - Available comparators : = < > <= >= <> LIKE
      *      - Available operators : or and not
-     *      example : " user.mail <> 'notexcepted@mail.com' or place.name LIKE 'starting_name%' "
+     *      example : " user.mail <> :mail or place.name LIKE :placeName "
+     * @param $params
+     *      example : ["mail" => "notexcepted@mail.com", "placeName" => "starting_name%"]
      * @return IFinder
      */
-    public function where($condition)
+    public function where($condition, $params = [])
     {
 
     }

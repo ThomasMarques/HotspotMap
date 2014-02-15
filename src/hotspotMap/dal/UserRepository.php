@@ -29,27 +29,31 @@ class UserRepository
 
     /**
      * @param int $id
-     * @return \hotspotmap\model\User
+     * @return \HotspotMap\model\User
      */
     public function findOneById($id)
     {
+        $this->finder->select(array("mailAddress", "privilege", "displayName"))
+            ->from(array("user"))
+            ->where("user.id = :userId", ["userId" => $id])
+            ->getResults();
     }
 
     /**
-     * @param \hotspotmap\model\User $user
-     * @return bool
+     * @param \Hotspotmap\model\User $user
+     * @return array
      */
-    public function save(\hotspotmap\model\User $user)
+    public function save(\Hotspotmap\model\User $user)
     {
-        $this->userMapper->persist($user);
+        return $this->userMapper->persist($user);
     }
 
     /**
-     * @param \hotspotmap\model\User $user
-     * @return bool
+     * @param \Hotspotmap\model\User $user
+     * @return array
      */
-    public function remove(\hotspotmap\model\User $user)
+    public function remove(\Hotspotmap\model\User $user)
     {
-        $this->userMapper->remove($user);
+        return $this->userMapper->remove($user);
     }
 } 

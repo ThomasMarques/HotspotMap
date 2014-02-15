@@ -29,27 +29,27 @@ class PlaceRepository
 
     /**
      * @param int $id
-     * @return \hotspotmap\model\Place
+     * @return \Hotspotmap\model\Place
      */
     public function findOneById($id)
     {
     }
 
     /**
-     * @param \hotspotmap\model\Place $place
+     * @param \Hotspotmap\model\Place $place
      * @return bool
      */
-    public function save(\hotspotmap\model\Place $place)
+    public function save(\Hotspotmap\model\Place $place)
     {
-        $this->placeMapper->persist($place);
+        return $this->placeMapper->persist($place);
     }
 
     /**
-     * @param \hotspotmap\model\Place $place
+     * @param \Hotspotmap\model\Place $place
      * @return bool
      */
-    public function remove(\hotspotmap\model\Place $place)
+    public function remove(\Hotspotmap\model\Place $place)
     {
-        $this->placeMapper->remove($place);
+        return $this->placeMapper->remove($place);
     }
 } 

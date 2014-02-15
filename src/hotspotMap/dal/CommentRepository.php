@@ -29,27 +29,27 @@ class CommentRepository
 
     /**
      * @param int $id
-     * @return \hotspotmap\model\Comment
+     * @return \Hotspotmap\model\Comment
      */
     public function findOneById($id)
     {
     }
 
     /**
-     * @param \hotspotmap\model\Comment $comment
+     * @param \Hotspotmap\model\Comment $comment
      * @return bool
      */
-    public function save(\hotspotmap\model\Comment $comment)
+    public function save(\Hotspotmap\model\Comment $comment)
     {
-        $this->commentMapper->persist($comment);
+        return $this->commentMapper->persist($comment);
     }
 
     /**
-     * @param \hotspotmap\model\Comment $comment
+     * @param \Hotspotmap\model\Comment $comment
      * @return bool
      */
-    public function remove(\hotspotmap\model\Comment $comment)
+    public function remove(\Hotspotmap\model\Comment $comment)
     {
-        $this->commentMapper->remove($comment);
+        return $this->commentMapper->remove($comment);
     }
 } 

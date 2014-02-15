@@ -5,13 +5,11 @@ namespace HotspotMap\dal\MySqlImplementation;
 
 class Connexion extends \PDO
 {
-    /**
-     * @param string $dsn
-     * @param string $user
-     * @param string $password
-     */
-    public function __construct($dsn, $user, $password)
+    public function __construct()
     {
+        $dsn = "mysql:host=localhost;dbname=hotspotmap";
+        $user = "root";
+        $password = "";
         parent::__construct($dsn, $user, $password);
     }
 
@@ -20,7 +18,7 @@ class Connexion extends \PDO
      * @param array $parameters
      * @return bool Returns `true` on success, `false` otherwise
      */
-    public function executeQuery($query, array $parameters = [])
+    public function executeQuery($query, $parameters = [])
     {
         $stmt = $this->prepare($query);
 
@@ -40,7 +38,6 @@ class Connexion extends \PDO
             }
 
             $stmt->bindValue(':' . $name, $value,$paramType);
-            print ':' . $name . " -> " . $value . " \\ " .$paramType . "\n";
         }
 
         return $stmt->execute();
