@@ -16,9 +16,9 @@ class Connexion extends \PDO
     /**
      * @param string $query
      * @param array $parameters
-     * @return bool Returns `true` on success, `false` otherwise
+     * @return \PDOStatement
      */
-    public function executeQuery($query, $parameters = [])
+    private function prepareStatement($query, $parameters = [])
     {
         $stmt = $this->prepare($query);
 
@@ -40,6 +40,32 @@ class Connexion extends \PDO
             $stmt->bindValue(':' . $name, $value,$paramType);
         }
 
+        return $stmt;
+    }
+
+    /**
+     * @param string $query
+     * @param array $parameters
+     * @return bool Returns `true` on success, `false` otherwise
+     */
+    public function executeQuery($query, $parameters = [])
+    {
+        $stmt = $this->prepareStatement($query, $parameters);
         return $stmt->execute();
+    }
+
+    /**
+     * @param string $query
+     * @param array $parameters
+     * @return bool Returns results array on success, `false` otherwise
+     */
+    public function selectQuery($query, $parameters = [])
+    {
+        $stmt = $this->prepareStatement($query, $parameters);
+        if($stmt->execute())
+        {
+            return $stmt->fetchAll();
+        }
+        return false;
     }
 } 

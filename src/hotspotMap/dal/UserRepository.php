@@ -4,6 +4,7 @@ namespace HotspotMap\dal;
 
 require_once "IUserMapper.php";
 require_once "IFinder.php";
+require_once __DIR__ . "/../model/User.php";
 
 class UserRepository
 {
@@ -29,14 +30,25 @@ class UserRepository
 
     /**
      * @param int $id
-     * @return \HotspotMap\model\User
+     * @return \Hotspotmap\model\User
      */
     public function findOneById($id)
     {
-        $this->finder->select(array("mailAddress", "privilege", "displayName"))
+        $data = $this->finder->select(array("mailAddress", "privilege", "displayName"))
             ->from(array("user"))
-            ->where("user.id = :userId", ["userId" => $id])
+            ->where("userId = :userId", ["userId" => $id])
             ->getResults();
+
+        $user = null;
+        if(sizeof($data) == 1)
+        {
+            $user = new \Hotspotmap\model\User();
+            $user->setUserId($id);
+            $user->setMailAddress($data[0][0]);
+            $user->setPrivilege(intval($data[0][1]));
+            $user->setDisplayName($data[0][2]);
+        }
+        return $user;
     }
 
     /**

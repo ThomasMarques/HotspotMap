@@ -14,12 +14,12 @@ interface IFinder {
     public function select($fieldsArray = []);
 
     /**
-     * @param array $entityName
+     * @param array $entitiesName
      *      string array
      *      example : array(user, comment, place)
      * @return IFinder
      */
-    public function from($entityName= []);
+    public function from($entitiesName= []);
 
     /**
      * @param string $condition
