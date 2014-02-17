@@ -33,6 +33,17 @@ class CommentRepository
      */
     public function findOneById($id)
     {
+        $data = $this->finder->select(array("*"))
+            ->from(array("Comment"))
+            ->where("commentId = :CommentId", ["CommentId" => $id])
+            ->getResults();
+
+        $comment = null;
+        if(sizeof($data) == 1)
+        {
+            $comment = $this->createCommentFromData($data[0]);
+        }
+        return $comment;
     }
 
     /**
@@ -51,5 +62,17 @@ class CommentRepository
     public function remove(\Hotspotmap\model\Comment $comment)
     {
         return $this->commentMapper->remove($comment);
+    }
+
+    /**
+     * @param array $commentData
+     * @return \Hotspotmap\model\Comment
+     */
+    private function createUserFromData($commentData  = [])
+    {
+        $comment = new \Hotspotmap\model\Comment();
+        $comment->setCommentId($commentData[0]);
+        $comment->setContent($commentData[1]);
+        return $comment;
     }
 } 

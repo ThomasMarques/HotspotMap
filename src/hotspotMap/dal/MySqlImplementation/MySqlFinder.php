@@ -106,6 +106,7 @@ class MySqlFinder implements \HotspotMap\dal\IFinder
      */
     public function getResults()
     {
+        //print $this->query;
         return $this->connexion->selectQuery($this->query, $this->parameters);
     }
 } 

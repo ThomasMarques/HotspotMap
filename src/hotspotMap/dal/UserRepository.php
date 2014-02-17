@@ -34,7 +34,7 @@ class UserRepository
      */
     public function findOneById($id)
     {
-        $data = $this->finder->select(array("mailAddress", "privilege", "displayName"))
+        $data = $this->finder->select(array("userId", "mailAddress", "privilege", "displayName"))
             ->from(array("user"))
             ->where("userId = :userId", ["userId" => $id])
             ->getResults();
@@ -42,11 +42,7 @@ class UserRepository
         $user = null;
         if(sizeof($data) == 1)
         {
-            $user = new \Hotspotmap\model\User();
-            $user->setUserId($id);
-            $user->setMailAddress($data[0][0]);
-            $user->setPrivilege(intval($data[0][1]));
-            $user->setDisplayName($data[0][2]);
+            $user = $this->createUserFromData($data[0]);
         }
         return $user;
     }
@@ -67,5 +63,19 @@ class UserRepository
     public function remove(\Hotspotmap\model\User $user)
     {
         return $this->userMapper->remove($user);
+    }
+
+    /**
+     * @param array $userData
+     * @return \Hotspotmap\model\User
+     */
+    private function createUserFromData($userData  = [])
+    {
+        $user = new \Hotspotmap\model\User();
+        $user->setUserId($userData[0]);
+        $user->setMailAddress($userData[1]);
+        $user->setPrivilege(intval($userData[2]));
+        $user->setDisplayName($userData[3]);
+        return $user;
     }
 } 

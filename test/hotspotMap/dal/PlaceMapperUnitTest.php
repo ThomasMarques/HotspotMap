@@ -60,8 +60,8 @@ class PlaceMapperUnitTest extends \PHPUnit_Framework_TestCase
         ///
 
         /// Insertion with good parameters
-        $place->setLongitude(48.84951);
         $place->setLatitude(2.29791);
+        $place->setLongitude(48.84951);
         $errors = self::$placeRepository->save($place);
 
         $this->assertEmpty($errors);
@@ -74,6 +74,8 @@ class PlaceMapperUnitTest extends \PHPUnit_Framework_TestCase
         /// Insertion
         $place = new \HotspotMap\model\Place();
         $place->setName("Starbucks");
+        $place->setLatitude(2.29791);
+        $place->setLongitude(48.84951);
         $place->setSchedules("07:30 – 21:00");//\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00");
         $place->setDescription("Good Starbuks with Wifi");
         $place->setCoffee(true);
@@ -81,8 +83,8 @@ class PlaceMapperUnitTest extends \PHPUnit_Framework_TestCase
         $place->setPlacesNumber(100);
         $place->setComfort(4);
         $place->setFrequenting(4);
-        $place->setSubmissionDate(new \DateTime());
         $place->setVisitNumber(0);
+        $place->setSubmissionDate(new \DateTime());
         $place->setValidate(0);
         self::$placeRepository->save($place);
         ///
