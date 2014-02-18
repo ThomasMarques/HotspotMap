@@ -1,30 +1,30 @@
 <?php
 
-namespace hotspotMap\service;
+namespace HotspotMap\dal\MySqlImplementation;
 
-require_once __DIR__ . "/../model/Place.php";
+require_once __DIR__ . "/../../model/Place.php";
+require_once __DIR__ . "/../IPlaceMapper.php";
 
-class PlaceMapper
+class MySqlPlaceMapper extends \HotspotMap\dal\IPlaceMapper
 {
+    /**
+     * @var Connexion
+     */
+    private $connexion;
 
     /**
-     * @var DataAccessLayer
+     * @param Connexion $connexion
      */
-    private $dal;
-
-    /**
-     * @param DataAccessLayer $dal
-     */
-    public function __construct(DataAccessLayer $dal)
+    public function __construct(Connexion $connexion)
     {
-        $this->dal = $dal;
+        $this->connexion = $connexion;
     }
 
     /**
-     * @param \hotspotmap\model\Place $place
+     * @param \Hotspotmap\model\Place $place
      * @return array
      */
-    public function persist(\hotspotmap\model\Place $place)
+    public function persist(\Hotspotmap\model\Place $place)
     {
         $errors = $this->checkAttribute($place);
 
@@ -79,17 +79,17 @@ SQL;
             $parameters["validate"] = $place->getValidate();
             ///
 
-            $success = $this->dal->executeQuery($query, $parameters);
+            $success = $this->connexion->executeQuery($query, $parameters);
             if($success)
             {
                 if($isNew)
                 {
-                    $place->setPlaceId(intval($this->dal->lastInsertId()));
+                    $place->setPlaceId(intval($this->connexion->lastInsertId()));
                 }
             }
             else
             {
-                $errors = $this->dal->errorInfo();
+                $errors = $this->connexion->errorInfo();
             }
         }
 
@@ -97,10 +97,10 @@ SQL;
     }
 
     /**
-     * @param \hotspotmap\model\Place $place
+     * @param \Hotspotmap\model\Place $place
      * @return array
      */
-    public function remove(\hotspotmap\model\Place $place)
+    public function remove(\Hotspotmap\model\Place $place)
     {
         $errors = [];
 
@@ -116,39 +116,11 @@ DELETE FROM Place
 WHERE placeId = :placeId
 SQL;
             $parameters["placeId"] = $place->getPlaceId();
-            if(!$this->dal->executeQuery($query, $parameters))
+            if(!$this->connexion->executeQuery($query, $parameters))
             {
-                $errors = $this->dal->errorInfo();
+                $errors = $this->connexion->errorInfo();
             }
         }
-        return $errors;
-    }
-
-    /**
-     * @param \hotspotmap\model\Place $place
-     * @return array
-     */
-    private function checkAttribute(\hotspotmap\model\Place $place)
-    {
-        $errors = [];
-
-        if(null == $place->getName() || strlen($place->getName()) < 1)
-        {
-            $errors["name"] = "The attribute name cannot be null or empty.";
-        }
-        if(null == $place->getLatitude() || $place->getLatitude() < -90 || $place->getLatitude() > 90)
-        {
-            $errors["latitude"] = "The latitude must be between -90 and 90.";
-        }
-        if(null == $place->getLongitude() || $place->getLongitude() < -180 || $place->getLongitude() > 180)
-        {
-            $errors["longitude"] = "The latitude must be between -180 and 180.";
-        }
-        if(null == $place->getSchedules() || strlen($place->getSchedules()) < 1)
-        {
-            $errors["schedules"] = "The schedules cannot be null or empty.";
-        }
-
         return $errors;
     }
 } 

@@ -1,6 +1,6 @@
 <?php
 
-namespace hotspotMap\model;
+namespace HotspotMap\model;
 
 
 class Place {

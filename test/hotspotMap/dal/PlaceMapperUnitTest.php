@@ -1,34 +1,39 @@
 <?php
 
-namespace hotspotMap\service;
+namespace HotspotMap\dal;
 
-require_once "../../../src/hotspotMap/service/PlaceMapper.php";
-require_once "../../../src/hotspotMap/service/DataAccessLayer.php";
+require_once "../../../src/hotspotMap/dal/DALFactory.php";
 require_once "../../../src/hotspotMap/model/Place.php";
 
 class PlaceMapperUnitTest extends \PHPUnit_Framework_TestCase
 {
-    protected static $dal;
-    protected static $placeMapper;
+    /**
+     * @var PlaceRepository
+     */
+    protected static $placeRepository;
+
+    /**
+     * @var Connection
+     */
+    protected static $connexion;
 
     public static function setUpBeforeClass()
     {
         /// Objects construction
-        /// Connexion to the database for tests
-        self::$dal = new DataAccessLayer("mysql:host=localhost;dbname=hotspotmaptest", "root", "");
-        self::$placeMapper  = new PlaceMapper(self::$dal);
+        self::$connexion = \HotspotMap\dal\DALFactory::getConnexion();
+        self::$placeRepository = \HotspotMap\dal\DALFactory::getRepository("Place");
     }
 
     public static function tearDownAfterClass()
     {
         /// Objects destruction
-        self::$dal = NULL;
-        self::$placeMapper = NULL;
+        self::$placeRepository = NULL;
+        self::$connexion = NULL;
     }
 
     public function testInsertPlace()
     {
-        $place = new \hotspotMap\model\Place();
+        $place = new \HotspotMap\model\Place();
         /// Insertion with null arguments (name, latitude, longitude)
         $place->setSchedules("07:30 – 21:00");//\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00");
         $place->setDescription("Good Starbuks with Wifi");
@@ -40,7 +45,7 @@ class PlaceMapperUnitTest extends \PHPUnit_Framework_TestCase
         $place->setSubmissionDate(new \DateTime());
         $place->setVisitNumber(0);
         $place->setValidate(0);
-        $errors = self::$placeMapper->persist($place);
+        $errors = self::$placeRepository->save($place);
 
         $this->assertNotEmpty($errors);
         ///
@@ -49,15 +54,15 @@ class PlaceMapperUnitTest extends \PHPUnit_Framework_TestCase
         $place->setName("Starbucks");
         $place->setLongitude(200);
         $place->setLatitude(-120);
-        $errors = self::$placeMapper->persist($place);
+        $errors = self::$placeRepository->save($place);
 
         $this->assertNotEmpty($errors);
         ///
 
         /// Insertion with good parameters
-        $place->setLongitude(48.84951);
         $place->setLatitude(2.29791);
-        $errors = self::$placeMapper->persist($place);
+        $place->setLongitude(48.84951);
+        $errors = self::$placeRepository->save($place);
 
         $this->assertEmpty($errors);
         $this->assertNotNull($place->getPlaceId());
@@ -67,8 +72,10 @@ class PlaceMapperUnitTest extends \PHPUnit_Framework_TestCase
     public function testUpdatePlace()
     {
         /// Insertion
-        $place = new \hotspotMap\model\Place();
+        $place = new \HotspotMap\model\Place();
         $place->setName("Starbucks");
+        $place->setLatitude(2.29791);
+        $place->setLongitude(48.84951);
         $place->setSchedules("07:30 – 21:00");//\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00");
         $place->setDescription("Good Starbuks with Wifi");
         $place->setCoffee(true);
@@ -76,16 +83,16 @@ class PlaceMapperUnitTest extends \PHPUnit_Framework_TestCase
         $place->setPlacesNumber(100);
         $place->setComfort(4);
         $place->setFrequenting(4);
-        $place->setSubmissionDate(new \DateTime());
         $place->setVisitNumber(0);
+        $place->setSubmissionDate(new \DateTime());
         $place->setValidate(0);
-        self::$placeMapper->persist($place);
+        self::$placeRepository->save($place);
         ///
 
         /// Bad update with bad location
         $place->setLongitude(200);
         $place->setLatitude(-120);
-        $errors = self::$placeMapper->persist($place);
+        $errors = self::$placeRepository->save($place);
 
         $this->assertNotEmpty($errors);
         ///
@@ -93,7 +100,7 @@ class PlaceMapperUnitTest extends \PHPUnit_Framework_TestCase
         /// Update with good parameters
         $place->setLongitude(48.84951);
         $place->setLatitude(2.29791);
-        $errors = self::$placeMapper->persist($place);
+        $errors = self::$placeRepository->save($place);
 
         $this->assertEmpty($errors);
         ///
@@ -102,7 +109,7 @@ class PlaceMapperUnitTest extends \PHPUnit_Framework_TestCase
     public function testDeletePlace()
     {
         /// Insertion
-        $place = new \hotspotMap\model\Place();
+        $place = new \HotspotMap\model\Place();
         $place->setName("Starbucks");
         $place->setLongitude(48.84951);
         $place->setLatitude(2.29791);
@@ -116,20 +123,20 @@ class PlaceMapperUnitTest extends \PHPUnit_Framework_TestCase
         $place->setSubmissionDate(new \DateTime());
         $place->setVisitNumber(0);
         $place->setValidate(0);
-        self::$placeMapper->persist($place);
+        self::$placeRepository->save($place);
         ///
 
         /// Removing test with null id
         $placeId = $place->getPlaceId();
         $place->setPlaceId(null);
-        $errors = self::$placeMapper->remove($place);
+        $errors = self::$placeRepository->remove($place);
 
         $this->assertNotEmpty($errors);
         ///
 
         /// Removing test with null id
         $place->setPlaceId($placeId);
-        $errors = self::$placeMapper->remove($place);
+        $errors = self::$placeRepository->remove($place);
 
         $this->assertEmpty($errors);
         ///
@@ -138,12 +145,12 @@ class PlaceMapperUnitTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         /// Begin transaction
-        self::$dal->beginTransaction();
+        self::$connexion->beginTransaction();
     }
 
     protected function tearDown()
     {
         /// RollBack
-        self::$dal->rollBack();
+        self::$connexion->rollBack();
     }
 } 

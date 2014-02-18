@@ -1,39 +1,49 @@
 <?php
 
-namespace hotspotMap\service;
+namespace HotspotMap\dal;
 
-require_once "../../../src/hotspotMap/service/DataAccessLayer.php";
-require_once "../../../src/hotspotMap/service/CommentMapper.php";
-require_once "../../../src/hotspotMap/service/PlaceMapper.php";
-require_once "../../../src/hotspotMap/service/UserMapper.php";
+require_once "../../../src/hotspotMap/dal/DALFactory.php";
 require_once "../../../src/hotspotMap/model/Comment.php";
-require_once "../../../src/hotspotMap/model/Place.php";
 require_once "../../../src/hotspotMap/model/User.php";
+require_once "../../../src/hotspotMap/model/Place.php";
 
 class CommentMapperUnitTest extends \PHPUnit_Framework_TestCase
 {
-    protected static $dal;
-    protected static $commentMapper;
-    protected static $placeMapper;
-    protected static $userMapper;
+    /**
+     * @var Connexion
+     */
+    protected static $connexion;
+
+    /**
+     * @var PlaceRepository
+     */
+    protected static $placeRepository;
+    /**
+     * @var UserRepository
+     */
+    protected static $userRepository;
+    /**
+     * @var CommentRepository
+     */
+    protected static $commentRepository;
 
     public static function setUpBeforeClass()
     {
         /// Objects construction
         /// Connexion to the database for tests
-        self::$dal = new DataAccessLayer("mysql:host=localhost;dbname=hotspotmaptest", "root", "");
-        self::$commentMapper  = new CommentMapper(self::$dal);
-        self::$placeMapper = new PlaceMapper(self::$dal);
-        self::$userMapper = new UserMapper(self::$dal);
+        self::$connexion = \HotspotMap\dal\DALFactory::getConnexion();
+        self::$placeRepository = \HotspotMap\dal\DALFactory::getRepository("Place");
+        self::$userRepository = \HotspotMap\dal\DALFactory::getRepository("User");
+        self::$commentRepository = \HotspotMap\dal\DALFactory::getRepository("Comment");
     }
 
     public static function tearDownAfterClass()
     {
         /// Objects destruction
-        self::$dal = NULL;
-        self::$commentMapper  = NULL;
-        self::$placeMapper = NULL;
-        self::$userMapper = NULL;
+        self::$placeRepository = NULL;
+        self::$userRepository = NULL;
+        self::$commentRepository = NULL;
+        self::$connexion = NULL;
     }
 
     /**
@@ -41,7 +51,7 @@ class CommentMapperUnitTest extends \PHPUnit_Framework_TestCase
      */
     private function insertNewPlace()
     {
-        $place = new \hotspotMap\model\Place();
+        $place = new \HotspotMap\model\Place();
         $place->setName("Starbucks");
         $place->setLongitude(48.84951);
         $place->setLatitude(2.297911);
@@ -55,7 +65,7 @@ class CommentMapperUnitTest extends \PHPUnit_Framework_TestCase
         $place->setSubmissionDate(new \DateTime());
         $place->setVisitNumber(0);
         $place->setValidate(0);
-        self::$placeMapper->persist($place);
+        self::$placeRepository->save($place);
 
         return $place->getPlaceId();
     }
@@ -65,11 +75,11 @@ class CommentMapperUnitTest extends \PHPUnit_Framework_TestCase
      */
     private function insertNewUser()
     {
-        $user = new \hotspotMap\model\User();
+        $user = new \HotspotMap\model\User();
         $user->setPrivilege(0);
         $user->setDisplayName("Display Name");
         $user->setMailAddress("good@address.fr");
-        self::$userMapper->persist($user);
+        self::$userRepository->save($user);
 
         return $user->getUserId();
     }
@@ -79,11 +89,11 @@ class CommentMapperUnitTest extends \PHPUnit_Framework_TestCase
         $placeId = $this->insertNewPlace();
         $userId = $this->insertNewUser();
 
-        $comment = new \hotspotMap\model\Comment();
+        $comment = new \HotspotMap\model\Comment();
         /// Insertion with null content
         $comment->setPlaceId($placeId);
         $comment->setUserId($userId);
-        $errors = self::$commentMapper->persist($comment);
+        $errors = self::$commentRepository->save($comment);
 
         $this->assertNotEmpty($errors);
         ///
@@ -92,7 +102,7 @@ class CommentMapperUnitTest extends \PHPUnit_Framework_TestCase
         $comment->setContent("My content");
         $comment->setAuthorDisplayName("Batman");
         $comment->setUserId($userId);
-        $errors = self::$commentMapper->persist($comment);
+        $errors = self::$commentRepository->save($comment);
 
         $this->assertNotEmpty($errors);
         ///
@@ -100,7 +110,7 @@ class CommentMapperUnitTest extends \PHPUnit_Framework_TestCase
         /// Insertion with only displayName
         $comment->setUserId(null);
         $comment->setAuthorDisplayName("Batman");
-        $errors = self::$commentMapper->persist($comment);
+        $errors = self::$commentRepository->save($comment);
 
         $this->assertEmpty($errors);
         $this->assertNotNull($comment->getCommentId());
@@ -110,7 +120,7 @@ class CommentMapperUnitTest extends \PHPUnit_Framework_TestCase
         $comment->setCommentId(null);
         $comment->setUserId($userId);
         $comment->setAuthorDisplayName(null);
-        $errors = self::$commentMapper->persist($comment);
+        $errors = self::$commentRepository->save($comment);
 
         $this->assertEmpty($errors);
         $this->assertNotNull($comment->getCommentId());
@@ -121,24 +131,24 @@ class CommentMapperUnitTest extends \PHPUnit_Framework_TestCase
     {
         $placeId = $this->insertNewPlace();
         /// Insertion
-        $comment = new \hotspotMap\model\Comment();
+        $comment = new \HotspotMap\model\Comment();
         $comment->setContent("My content");
         $comment->setPlaceId($placeId);
         $comment->setAuthorDisplayName("Batman");
-        self::$commentMapper->persist($comment);
+        self::$commentRepository->save($comment);
         ///
 
         /// Bad update with bad
         $comment->setContent(null);
         $comment->setAuthorDisplayName(null);
-        $errors = self::$commentMapper->persist($comment);
+        $errors = self::$commentRepository->save($comment);
         $this->assertNotEmpty($errors);
         ///
 
         /// Update with good
         $comment->setContent("My content");
         $comment->setAuthorDisplayName("Batman");
-        $errors = self::$commentMapper->persist($comment);
+        $errors = self::$commentRepository->save($comment);
 
         $this->assertEmpty($errors);
         ///
@@ -148,24 +158,24 @@ class CommentMapperUnitTest extends \PHPUnit_Framework_TestCase
     {
         $placeId = $this->insertNewPlace();
         /// Insertion
-        $comment = new \hotspotMap\model\Comment();
+        $comment = new \HotspotMap\model\Comment();
         $comment->setContent("My content");
         $comment->setPlaceId($placeId);
         $comment->setAuthorDisplayName("Batman");
-        self::$commentMapper->persist($comment);
+        self::$commentRepository->save($comment);
         ///
 
         /// Removing test with null id
         $commentId = $comment->getCommentId();
         $comment->setCommentId(null);
-        $errors = self::$commentMapper->remove($comment);
+        $errors = self::$commentRepository->remove($comment);
 
         $this->assertNotEmpty($errors);
         ///
 
         /// Removing test with null id
         $comment->setCommentId($commentId);
-        $errors = self::$commentMapper->remove($comment);
+        $errors = self::$commentRepository->remove($comment);
 
         $this->assertEmpty($errors);
         ///
@@ -174,12 +184,12 @@ class CommentMapperUnitTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         /// Begin transaction
-        self::$dal->beginTransaction();
+        self::$connexion->beginTransaction();
     }
 
     protected function tearDown()
     {
         /// RollBack
-        self::$dal->rollBack();
+        self::$connexion->rollBack();
     }
 } 
