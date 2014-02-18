@@ -13,7 +13,7 @@ use Hateoas\HateoasBuilder;
 
 class JsonRenderer implements Renderer {
 
-    public function render($data)
+    public function render($app, $view, $data)
     {
 
         $serializer = HateoasBuilder::create()->build();

@@ -13,7 +13,7 @@ use Hateoas\HateoasBuilder;
 
 class XmlRenderer implements Renderer {
 
-    public function render($data)
+    public function render($app, $view, $data)
     {
 
         $serializer = HateoasBuilder::create()->build();

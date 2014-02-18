@@ -4,6 +4,7 @@ require_once __DIR__.'/../vendor/autoload.php';
 
 use Symfony\Component\HttpFoundation\Request;
 use HotspotMap\View\Renderer\RendererFactory;
+use Silex\Provider\TwigServiceProvider;
 
 $app = new Silex\Application();
 $app['mime-types'] = [ 'text/html', 'application/xml', 'application/json' ];
@@ -15,6 +16,10 @@ $app['debug'] = true;
 $app['renderer'] = $app->share(function () use ($app) {
     return new \HotspotMap\View\ViewRenderer($app, $_SERVER, new RendererFactory());
 });
+
+$app->register(new TwigServiceProvider(), array(
+    'twig.path' => __DIR__.'/../web/views',
+));
 
 /*
  * Places Controller

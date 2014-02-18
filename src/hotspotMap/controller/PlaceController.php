@@ -20,9 +20,9 @@ class PlaceController
     {
 
         $user = new User();
-        $user->setDisplayName("alexnadre");
+        $user->setDisplayName("alexandre");
 
-        return $app['renderer']->render(200, $user);
+        return $app['renderer']->render($app, 200, $user);
     }
 
     public function postAction (Request $request, Application $app)
