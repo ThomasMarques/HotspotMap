@@ -18,12 +18,12 @@ class Comment {
     /**
      * @var int
      */
-    private $placeId;
+    private $place;
 
     /**
      * @var int
      */
-    private $userId;
+    private $user;
 
     /**
      * @var string
@@ -34,25 +34,25 @@ class Comment {
     {
         $this->commentId = null;
         $this->content = null;
-        $this->placeId = null;
-        $this->userId = null;
+        $this->place = null;
+        $this->user = null;
         $this->authorDisplayName = null;
     }
 
     /**
-     * @param int $userId
+     * @param \HotspotMap\model\User $user
      */
-    public function setUserId($userId)
+    public function setUser($user)
     {
-        $this->userId = $userId;
+        $this->user = $user;
     }
 
     /**
-     * @return int
+     * @return \HotspotMap\model\User
      */
-    public function getUserId()
+    public function getUser()
     {
-        return $this->userId;
+        return $this->user;
     }
 
     /**
@@ -88,19 +88,19 @@ class Comment {
     }
 
     /**
-     * @param int $placeId
+     * @param \HotspotMap\model\Place $place
      */
-    public function setPlaceId($placeId)
+    public function setPlace($place)
     {
-        $this->placeId = $placeId;
+        $this->place = $place;
     }
 
     /**
-     * @return int
+     * @return \HotspotMap\model\Place
      */
-    public function getPlaceId()
+    public function getPlace()
     {
-        return $this->placeId;
+        return $this->place;
     }
 
     /**

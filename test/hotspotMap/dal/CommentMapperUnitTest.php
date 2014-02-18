@@ -47,7 +47,7 @@ class CommentMapperUnitTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return int
+     * @return \HotspotMap\model\Place
      */
     private function insertNewPlace()
     {
@@ -67,11 +67,11 @@ class CommentMapperUnitTest extends \PHPUnit_Framework_TestCase
         $place->setValidate(0);
         self::$placeRepository->save($place);
 
-        return $place->getPlaceId();
+        return $place;
     }
 
     /**
-     * @return int
+     * @return \HotspotMap\model\User
      */
     private function insertNewUser()
     {
@@ -81,18 +81,18 @@ class CommentMapperUnitTest extends \PHPUnit_Framework_TestCase
         $user->setMailAddress("good@address.fr");
         self::$userRepository->save($user);
 
-        return $user->getUserId();
+        return $user;
     }
 
     public function testInsertComment()
     {
-        $placeId = $this->insertNewPlace();
-        $userId = $this->insertNewUser();
+        $place = $this->insertNewPlace();
+        $user = $this->insertNewUser();
 
         $comment = new \HotspotMap\model\Comment();
         /// Insertion with null content
-        $comment->setPlaceId($placeId);
-        $comment->setUserId($userId);
+        $comment->setPlace($place);
+        $comment->setUser($user);
         $errors = self::$commentRepository->save($comment);
 
         $this->assertNotEmpty($errors);
@@ -101,14 +101,14 @@ class CommentMapperUnitTest extends \PHPUnit_Framework_TestCase
         /// Insertion with userId and displayName (Not permitted)
         $comment->setContent("My content");
         $comment->setAuthorDisplayName("Batman");
-        $comment->setUserId($userId);
+        $comment->setUser($user);
         $errors = self::$commentRepository->save($comment);
 
         $this->assertNotEmpty($errors);
         ///
 
         /// Insertion with only displayName
-        $comment->setUserId(null);
+        $comment->setUser(null);
         $comment->setAuthorDisplayName("Batman");
         $errors = self::$commentRepository->save($comment);
 
@@ -118,7 +118,7 @@ class CommentMapperUnitTest extends \PHPUnit_Framework_TestCase
 
         /// Insertion with only userId
         $comment->setCommentId(null);
-        $comment->setUserId($userId);
+        $comment->setUser($user);
         $comment->setAuthorDisplayName(null);
         $errors = self::$commentRepository->save($comment);
 
@@ -129,11 +129,11 @@ class CommentMapperUnitTest extends \PHPUnit_Framework_TestCase
 
     public function testUpdateComment()
     {
-        $placeId = $this->insertNewPlace();
+        $place = $this->insertNewPlace();
         /// Insertion
         $comment = new \HotspotMap\model\Comment();
         $comment->setContent("My content");
-        $comment->setPlaceId($placeId);
+        $comment->setPlace($place);
         $comment->setAuthorDisplayName("Batman");
         self::$commentRepository->save($comment);
         ///
@@ -156,11 +156,11 @@ class CommentMapperUnitTest extends \PHPUnit_Framework_TestCase
 
     public function testDeleteComment()
     {
-        $placeId = $this->insertNewPlace();
+        $place = $this->insertNewPlace();
         /// Insertion
         $comment = new \HotspotMap\model\Comment();
         $comment->setContent("My content");
-        $comment->setPlaceId($placeId);
+        $comment->setPlace($place);
         $comment->setAuthorDisplayName("Batman");
         self::$commentRepository->save($comment);
         ///

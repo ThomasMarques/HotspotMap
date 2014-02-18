@@ -30,16 +30,16 @@ abstract class ICommentMapper
         {
             $errors["name"] = "The attribute content cannot be null or empty.";
         }
-        if(null == $comment->getPlaceId())
+        if(null == $comment->getPlace())
         {
             $errors["placeId"] = "The attribute placeId cannot be null.";
         }
-        if(null == $comment->getUserId() && null == $comment->getAuthorDisplayName())
+        if(null == $comment->getUser() && null == $comment->getAuthorDisplayName())
         {
             $errors["userId"] = "The attribute userId cannot be null if the display name is null.";
             $errors["displayName"] = "The attribute displayName cannot be null if the user id is null.";
         }
-        if(null != $comment->getUserId() && null != $comment->getAuthorDisplayName())
+        if(null != $comment->getUser() && null != $comment->getAuthorDisplayName())
         {
             $errors["userId"] = "The attribute userId must be null if the display name is not null.";
             $errors["displayName"] = "The attribute displayName must be null if the user id is not null.";
