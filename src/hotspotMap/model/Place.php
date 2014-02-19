@@ -2,7 +2,13 @@
 
 namespace HotspotMap\model;
 
+use Hateoas\Configuration\Relation;
+use Hateoas\Configuration\Annotation as Hateoas;
+use JMS\Serializer\Annotation as Serializer;
 
+/**
+ * @Hateoas\Relation("self", href = "expr('/places/' ~ object.getPlaceId())")
+ */
 class Place {
 
     /**

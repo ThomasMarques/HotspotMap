@@ -6,8 +6,12 @@ use HotspotMap\View\Renderer\Renderer;
 
 class HtmlRenderer implements Renderer {
 
-    public function render($data)
+    public function render($app, $view, $data)
     {
-        return 'html';
+
+        return $app['twig']->render('home.html', array(
+            'data'=>$data
+        ));
+
     }
 }

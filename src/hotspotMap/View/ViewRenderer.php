@@ -27,7 +27,7 @@ class ViewRenderer
         $this->rendererFactory = $factory;
     }
 
-    public function render($statusCode = 200, $data)
+    public function render($app, $statusCode = 200, $data)
     {
 
         $response = new Response();
@@ -56,7 +56,7 @@ class ViewRenderer
         $content = '';
         if ($rendererType != '') {
             $renderer = $this->rendererFactory->getRenderer($rendererType);
-            $content = $renderer->render($data);
+            $content = $renderer->render($app, '', $data);
         }
 
         $response->setContent($content);

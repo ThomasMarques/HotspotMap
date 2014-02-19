@@ -2,6 +2,9 @@
 
 namespace HotspotMap\model;
 
+use Hateoas\Configuration\Annotation as Hateoas;
+use JMS\Serializer\Annotation as Serializer;
+
 abstract class Privilege
 {
     const user = 0;
@@ -9,6 +12,9 @@ abstract class Privilege
     const Administrator = 2;
 }
 
+/**
+ * @Hateoas\Relation("self", href = "expr('/users/' ~ object.getUserId())")
+ */
 class User {
 
     /**
