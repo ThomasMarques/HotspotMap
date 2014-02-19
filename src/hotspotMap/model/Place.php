@@ -36,6 +36,11 @@ class Place {
     private $description;
 
     /**
+     * @var int
+     */
+    private $hotspotType;
+
+    /**
      * @var bool
      */
     private $coffee;
@@ -316,5 +321,19 @@ class Place {
         return $this->visitNumber;
     }
 
+    /**
+     * @param mixed $hotspotType
+     */
+    public function setHotspotType($hotspotType)
+    {
+        $this->hotspotType = $hotspotType;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getHotspotType()
+    {
+        return $this->hotspotType;
+    }
 } 

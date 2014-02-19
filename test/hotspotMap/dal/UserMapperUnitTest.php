@@ -5,7 +5,7 @@ namespace HotspotMap\dal;
 require_once "../../../src/hotspotMap/dal/DALFactory.php";
 require_once "../../../src/hotspotMap/model/User.php";
 
-class UserMapperUnitTest extends \PHPUnit_Framework_TestCase
+class UserRepositoryUnitTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var UserRepository

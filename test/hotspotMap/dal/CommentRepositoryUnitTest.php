@@ -7,7 +7,7 @@ require_once "../../../src/hotspotMap/model/Comment.php";
 require_once "../../../src/hotspotMap/model/User.php";
 require_once "../../../src/hotspotMap/model/Place.php";
 
-class CommentMapperUnitTest extends \PHPUnit_Framework_TestCase
+class CommentRepositoryUnitTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var Connexion
@@ -57,6 +57,7 @@ class CommentMapperUnitTest extends \PHPUnit_Framework_TestCase
         $place->setLatitude(2.297911);
         $place->setSchedules("07:30 – 21:00");
         $place->setDescription("Good Starbuks with Wifi");
+        $place->setHotspotType(0);
         $place->setCoffee(true);
         $place->setInternetAccess(true);
         $place->setPlacesNumber(100);
