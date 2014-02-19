@@ -83,8 +83,8 @@ class DALFactory
             $dataMapper = self::getDataMapper($entityName);
             $finder = self::getFinder();
             $className = "\\HotspotMap\\dal\\" . $entityName . "Repository";
-            self::$dataMapper[$entityName] = new $className($dataMapper, $finder);
+            self::$repositories[$entityName] = new $className($dataMapper, $finder);
         }
-        return self::$dataMapper[$entityName];
+        return self::$repositories[$entityName];
     }
 } 

@@ -58,8 +58,12 @@ SQL;
 
             /// Filling all parameters
             $parameters["content"] = $comment->getContent();
-            $parameters["placeId"] = $comment->getPlaceId();
-            $parameters["userId"] = $comment->getUserId();
+            $parameters["placeId"] = $comment->getPlace()->getPlaceId();
+            $parameters["userId"] = null;
+            if(null != $comment->getUser())
+            {
+                $parameters["userId"] = $comment->getUser()->getUserId();
+            }
             $parameters["authorDisplayName"] = $comment->getAuthorDisplayName();
             ///
 

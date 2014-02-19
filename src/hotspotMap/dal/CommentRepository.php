@@ -18,6 +18,16 @@ class CommentRepository
     private $finder;
 
     /**
+     * @var \HotspotMap\dal\UserRepository
+     */
+    private $userRepository;
+
+    /**
+     * @var \HotspotMap\dal\PlaceRepository
+     */
+    private $placeRepository;
+
+    /**
      * @param \HotspotMap\dal\ICommentMapper $commentMapper
      * @param \HotspotMap\dal\IFinder $finder
      */
@@ -25,6 +35,8 @@ class CommentRepository
     {
         $this->commentMapper = $commentMapper;
         $this->finder = $finder;
+        $this->placeRepository = \HotspotMap\dal\DALFactory::getRepository("Place");
+        $this->userRepository = \HotspotMap\dal\DALFactory::getRepository("User");
     }
 
     /**
@@ -68,11 +80,20 @@ class CommentRepository
      * @param array $commentData
      * @return \Hotspotmap\model\Comment
      */
-    private function createUserFromData($commentData  = [])
+    private function createCommentFromData($commentData  = [])
     {
+        ///`commentId`, `content`, `placeId`, `userId`, `authorDisplayName`
         $comment = new \Hotspotmap\model\Comment();
         $comment->setCommentId($commentData[0]);
         $comment->setContent($commentData[1]);
+        $place = $this->placeRepository->findOneById(intval($commentData[2]));
+        $comment->setPlace($place);
+        if(null != $commentData[3])
+        {
+            $user = $this->userRepository->findOneById(intval($commentData[3]));
+            $comment->setUser($user);
+        }
+        $this->placeRepository->findOneById($commentData[4]);
         return $comment;
     }
 } 
