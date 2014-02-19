@@ -9,14 +9,13 @@ $connexion = \HotspotMap\dal\DALFactory::getConnexion();
 
 $connexion->beginTransaction();
 
-/// Insertion
 $user = new \hotspotMap\model\User();
 $user->setPrivilege(0);
 $user->setDisplayName("Display Name");
 $user->setMailAddress("good@address.fr");
 $userRepository->save($user);
 $id = $user->getUserId();
-///
+
 $user = $userRepository->findOneById($id);
 
 print "User test findOneById : " . $user->getUserId();
@@ -25,7 +24,6 @@ print " | " . $user->getPrivilege();
 print " | " . $user->getDisplayName();
 print "</br></br>";
 
-/// Insertion
 $place = new \HotspotMap\model\Place();
 $place->setName("Starbucks");
 $place->setLatitude(2.29791);
@@ -42,7 +40,7 @@ $place->setSubmissionDate(new \DateTime());
 $place->setValidate(0);
 $placeRepository->save($place);
 $id = $place->getPlaceId();
-///
+
 $place = $placeRepository->findOneById($id);
 
 print "Place test findOneById : " . $place->getPlaceId();
@@ -80,7 +78,7 @@ $placeRepository->save($place);
 $id = $place->getPlaceId();
 
 $places = $placeRepository->findAllNotValidated();
-print "Place test findAllNotValidated : ";
+print "Place test findAllNotValidated : </br>";
 for( $i = 0 ; $i < sizeof($places) ; ++$i )
 {
     $place = $places[$i];
@@ -98,7 +96,22 @@ for( $i = 0 ; $i < sizeof($places) ; ++$i )
     print " | " . $place->getVisitNumber();
     print " | " . $place->getSubmissionDate()->format('d/m/Y');
     print " | " . $place->getValidate();
-    print "</br></br>";
+    print "</br>";
 }
+
+$comment = new \HotspotMap\model\Comment();
+$comment->setContent("My content");
+$comment->setPlace($place);
+$comment->setUser($user);
+$commentRepository->save($comment);
+$id = $comment->getCommentId();
+
+$comment = $commentRepository->findOneById($id);
+
+print "Comment test findOneById : " . $comment->getCommentId();
+print " | " . $comment->getContent();
+print " | " . $comment->getPlace()->getName();
+print " | " . ((null != $comment->getUser()) ? $comment->getUser()->getDisplayName() : $comment->getAuthorDisplayName());
+print "</br></br>";
 
 $connexion->rollBack();

@@ -80,7 +80,7 @@ class CommentRepository
      * @param array $commentData
      * @return \Hotspotmap\model\Comment
      */
-    private function createUserFromData($commentData  = [])
+    private function createCommentFromData($commentData  = [])
     {
         ///`commentId`, `content`, `placeId`, `userId`, `authorDisplayName`
         $comment = new \Hotspotmap\model\Comment();
@@ -90,7 +90,7 @@ class CommentRepository
         $comment->setPlace($place);
         if(null != $commentData[3])
         {
-            $user = $this->placeRepository->findOneById(intval($commentData[3]));
+            $user = $this->userRepository->findOneById(intval($commentData[3]));
             $comment->setUser($user);
         }
         $this->placeRepository->findOneById($commentData[4]);
