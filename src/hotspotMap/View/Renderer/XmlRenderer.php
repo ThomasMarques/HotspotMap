@@ -10,7 +10,7 @@ class XmlRenderer implements Renderer {
     public function render($app, $view, $data)
     {
 
-        $serializer = HateoasBuilder::create()->build();
+        $serializer = $app['serializer'];
 
         return $serializer->serialize($data, 'xml');
     }

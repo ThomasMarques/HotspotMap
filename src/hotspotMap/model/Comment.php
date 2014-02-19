@@ -2,7 +2,12 @@
 
 namespace HotspotMap\model;
 
+use Hateoas\Configuration\Annotation as Hateoas;
+use JMS\Serializer\Annotation as Serializer;
 
+/**
+ * @Hateoas\Relation("self", href = "expr('/comments/' ~ object.getCommentId())")
+ */
 class Comment {
 
     /**
