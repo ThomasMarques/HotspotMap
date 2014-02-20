@@ -62,7 +62,6 @@ class ViewRenderer
         $response->setContent($content);
         $response->setStatusCode($statusCode);
         $response->headers->add([ 'Content-Type' => $format ]);
-
         return $response;
 
     }

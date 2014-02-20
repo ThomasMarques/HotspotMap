@@ -34,12 +34,14 @@ $app['serializer'] = $app->share(function() use ($app) {
 });
 
 $app->register(new TwigServiceProvider(), array(
-    'twig.path' => __DIR__.'/../web/views',
+    'twig.path' => __DIR__.'/HotspotMap/View/Templates/',
 ));
 
 /*
  * Places Controller
  */
+$app->get('/', 'HotspotMap\Controller\PlaceController::listAction')
+    ->bind('home');
 $app->get('/places', 'HotspotMap\Controller\PlaceController::listAction')
     ->bind('place_list');
 $app->get('/places/{id}', 'HotspotMap\Controller\PlaceController::getAction')

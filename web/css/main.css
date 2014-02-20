@@ -1,0 +1,15 @@
+html { height: 100% }
+body { height: 100%; margin: 0; padding: 0 }
+
+.navbar img {
+    height: 30px;
+}
+
+#content {
+    height: calc( 100% - 90px );
+    -webkit-box-shadow: 0 0 5px 2px #D1D1D1;
+    box-shadow: 0 0 5px 2px #D1D1D1;
+    padding: 0;
+}
+
+#map-canvas { height: 100% }
