@@ -33,33 +33,41 @@
             </form>
             <ul class="nav navbar-nav">
                 <li class="active"><a href="#">Home</a></li>
+                <li class=""><a href="#" onclick="test()">Add Places</a></li>
             </ul>
         </div>
     </div>
 </header>
 
 <div id="content" class="container">
+    <div id="wrapper">
     {% include 'places/list.html' %}
+    </div>
 </div>
 
 <script type="text/javascript"
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBowRgWoTyoS7-yyw-aUUA_hcvQwZFeI0M&sensor=false">
 </script>
 <script type="text/javascript">
+    var pos;
+    var pos2;
+    var map;
+    var mapOptions;
     function initialize() {
 
         // Try HTML5 geolocation
         if(navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function(position) {
-                var pos = new google.maps.LatLng(position.coords.latitude,
+                pos2 = position;
+                pos = new google.maps.LatLng(position.coords.latitude,
                         position.coords.longitude);
 
-                var mapOptions = {
+                mapOptions = {
                     center: pos,
                     zoom: 8
                 };
 
-                var map = new google.maps.Map(document.getElementById("map-canvas"),
+                map = new google.maps.Map(document.getElementById("map-canvas"),
                         mapOptions);
 
                 var infowindow = new google.maps.InfoWindow({
@@ -93,6 +101,9 @@
 
         var infowindow = new google.maps.InfoWindow(options);
         map.setCenter(options.position);
+    }
+    function test () {
+        $('#wrapper').toggleClass('reduce');
     }
     google.maps.event.addDomListener(window, 'load', initialize);
 </script>
