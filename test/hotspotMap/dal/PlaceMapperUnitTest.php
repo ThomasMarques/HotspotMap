@@ -5,7 +5,7 @@ namespace HotspotMap\dal;
 require_once "../../../src/hotspotMap/dal/DALFactory.php";
 require_once "../../../src/hotspotMap/model/Place.php";
 
-class PlaceMapperUnitTest extends \PHPUnit_Framework_TestCase
+class PlaceRepositoryUnitTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var PlaceRepository
@@ -37,6 +37,7 @@ class PlaceMapperUnitTest extends \PHPUnit_Framework_TestCase
         /// Insertion with null arguments (name, latitude, longitude)
         $place->setSchedules("07:30 – 21:00");//\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00");
         $place->setDescription("Good Starbuks with Wifi");
+        $place->setHotspotType(0);
         $place->setCoffee(true);
         $place->setInternetAccess(true);
         $place->setPlacesNumber(100);
@@ -78,6 +79,7 @@ class PlaceMapperUnitTest extends \PHPUnit_Framework_TestCase
         $place->setLongitude(48.84951);
         $place->setSchedules("07:30 – 21:00");//\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00");
         $place->setDescription("Good Starbuks with Wifi");
+        $place->setHotspotType(0);
         $place->setCoffee(true);
         $place->setInternetAccess(true);
         $place->setPlacesNumber(100);
@@ -115,6 +117,7 @@ class PlaceMapperUnitTest extends \PHPUnit_Framework_TestCase
         $place->setLatitude(2.29791);
         $place->setSchedules("07:30 – 21:00");//\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00\n07:30 – 21:00");
         $place->setDescription("Good Starbuks with Wifi");
+        $place->setHotspotType(0);
         $place->setCoffee(true);
         $place->setInternetAccess(true);
         $place->setPlacesNumber(100);

@@ -93,14 +93,15 @@ class PlaceRepository
         $place->setLongitude(floatval($placeData[3]));
         $place->setSchedules($placeData[4]);
         $place->setDescription($placeData[5]);
-        $place->setCoffee(intval($placeData[6]) == 1);
-        $place->setInternetAccess(intval($placeData[7]) == 1);
-        $place->setPlacesNumber(intval($placeData[8]));
-        $place->setComfort(intval($placeData[9]));
-        $place->setFrequenting(intval($placeData[10]));
-        $place->setVisitNumber(intval($placeData[11]));
-        $place->setSubmissionDate($date = date_create_from_format("Y-m-d", $placeData[12]));
-        $place->setValidate(intval($placeData[13]) == 1);
+        $place->setCoffee(intval($placeData[6]));
+        $place->setCoffee(intval($placeData[7]) == 1);
+        $place->setInternetAccess(intval($placeData[8]) == 1);
+        $place->setPlacesNumber(intval($placeData[9]));
+        $place->setComfort(intval($placeData[10]));
+        $place->setFrequenting(intval($placeData[11]));
+        $place->setVisitNumber(intval($placeData[12]));
+        $place->setSubmissionDate($date = date_create_from_format("Y-m-d", $placeData[13]));
+        $place->setValidate(intval($placeData[14]) == 1);
 
         return $place;
     }

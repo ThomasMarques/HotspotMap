@@ -1,3 +1,6 @@
+CREATE DATABASE IF NOT EXISTS `hotspotmap` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `hotspotmap`;
+
 CREATE TABLE IF NOT EXISTS `comment` (
   `commentId` bigint(20) NOT NULL AUTO_INCREMENT,
   `content` varchar(200) NOT NULL,
@@ -7,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `comment` (
   PRIMARY KEY (`commentId`),
   KEY `userId` (`userId`),
   KEY `placeId` (`placeId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=18 ;
 
 CREATE TABLE IF NOT EXISTS `place` (
   `placeId` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -16,6 +19,7 @@ CREATE TABLE IF NOT EXISTS `place` (
   `longitude` double(10,7) NOT NULL,
   `schedules` varchar(200) NOT NULL,
   `description` varchar(200) DEFAULT NULL,
+  `hotspotType` int(11) NOT NULL DEFAULT '0' COMMENT '0,1 ou 2',
   `coffee` tinyint(4) DEFAULT NULL,
   `internetAccess` tinyint(4) DEFAULT NULL,
   `placesNumber` int(11) DEFAULT NULL,
@@ -25,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `place` (
   `submissionDate` date NOT NULL,
   `validate` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`placeId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=56 ;
 
 CREATE TABLE IF NOT EXISTS `user` (
   `userId` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -34,10 +38,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `displayName` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`userId`),
   UNIQUE KEY `mailAddress` (`mailAddress`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=18 ;
-
-ALTER TABLE `user`
-ADD CONSTRAINT CHECK (DATALENGTH(mailAddress) > 1)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=31 ;
 
 ALTER TABLE `comment`
   ADD CONSTRAINT `comment_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE,

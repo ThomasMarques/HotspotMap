@@ -37,8 +37,8 @@ class MySqlPlaceMapper extends \HotspotMap\dal\IPlaceMapper
                 // Insert
                 $query = <<<SQL
 INSERT INTO place
-(placeId, name, longitude, latitude, schedules, description, coffee, internetAccess, placesNumber, comfort, frequenting, visitNumber, submissionDate, validate)
-VALUES (NULL, :name, :longitude, :latitude, :schedules, :description, :coffee, :internetAccess, :placesNumber, :comfort, :frequenting, :visitNumber, :submissionDate, :validate);
+(placeId, name, longitude, latitude, schedules, description, hotspotType, coffee, internetAccess, placesNumber, comfort, frequenting, visitNumber, submissionDate, validate)
+VALUES (NULL, :name, :longitude, :latitude, :schedules, :description, :hotspotType, :coffee, :internetAccess, :placesNumber, :comfort, :frequenting, :visitNumber, :submissionDate, :validate);
 SQL;
             }
             else
@@ -51,10 +51,12 @@ longitude = :longitude,
 latitude = :latitude,
 schedules = :schedules,
 description = :description,
+hotspotType = :hotspotType,
 coffee = :coffee,
 internetAccess = :internetAccess,
 placesNumber = :placesNumber,
 comfort = :comfort,
+frequenting = :frequenting,
 visitNumber = :visitNumber,
 submissionDate = :submissionDate,
 validate = :validate
@@ -69,6 +71,7 @@ SQL;
             $parameters["latitude"] = $place->getLatitude();
             $parameters["schedules"] = $place->getSchedules();
             $parameters["description"] = $place->getDescription();
+            $parameters["hotspotType"] = $place->getHotspotType();
             $parameters["coffee"] = ($place->getCoffee() ? 1 : 0);
             $parameters["internetAccess"] = ($place->getInternetAccess() ? 1 : 0);
             $parameters["placesNumber"] = $place->getPlacesNumber();
