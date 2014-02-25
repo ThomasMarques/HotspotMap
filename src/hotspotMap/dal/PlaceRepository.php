@@ -27,6 +27,36 @@ class PlaceRepository
         $this->finder = $finder;
     }
 
+    public function countPlaces()
+    {
+        $data = $this->finder->select(array("count(*)"))
+            ->from(array("Place"))
+            ->getResults();
+
+        return intval($data[0]);
+    }
+
+    /**
+     * @param int $page
+     * @param int $limit
+     * @return array of Place
+     */
+    public function findAllByPage($page, $limit)
+    {
+        $data = $this->finder->select(array("*"))
+            ->from(array("Place"))
+            ->limit(($page-1) * $limit, $page * $limit)
+            ->getResults();
+
+        $places = [];
+        for( $i = 0 ; $i < sizeof($data) ; ++$i )
+        {
+            $place = $this->createPlaceFromData($data[$i]);
+            $places[] = $place;
+        }
+        return $places;
+    }
+
     /**
      * @param int $id
      * @return \Hotspotmap\model\Place
@@ -39,7 +69,7 @@ class PlaceRepository
             ->getResults();
 
         $place = null;
-        if(sizeof($data) == 1)
+        for( $i = 0 ; $i < sizeof($data) ; ++$i )
         {
             $place = $this->createPlaceFromData($data[0]);
         }

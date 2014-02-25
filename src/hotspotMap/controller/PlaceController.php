@@ -2,6 +2,7 @@
 
 namespace HotspotMap\Controller;
 
+use HotspotMap\dal\DALFactory;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,20 +16,24 @@ use Hateoas\Configuration\Annotation as Hateoas;
 
 class PlaceController
 {
+    /**
+     * @var PlaceRepository
+     */
+    private $placeRepository;
+
+    public function __construct()
+    {
+        $this->placeRepository = DALFactory::getRepository("Place");
+    }
 
     public function listAction (Request $request, Application $app, $page = 1)
     {
-
-        $place1 = new Place();
-        $place1->setName("Test");
-        $place1->setPlaceId(4);
-        $place2 = new Place();
-        $place2->setName("Test");
-        $place2->setPlaceId(4);
-
         $limit=20;
-        $total=1;
-        $result = $app['collection-helper']->buildCollection(array($place1,$place2), 'place_list', 'places', $page, $limit, $total);
+
+        $places = $this->placeRepository->findAllByPage($page, $limit);
+        $total = $this->placeRepository->countPlaces();
+
+        $result = $app['collection-helper']->buildCollection($places, 'place_list', 'places', $page, $limit, $total);
 
         return $app['renderer']->render($app, 200, $result);
 
@@ -37,9 +42,7 @@ class PlaceController
     public function getAction (Request $request, Application $app, $id)
     {
 
-        $place = new Place();
-        $place->setName("Test");
-        $place->setPlaceId(4);
+        $place = $this->placeRepository->findOneById($id);
 
         return $app['renderer']->render($app, 200, $place);
     }
@@ -56,7 +59,18 @@ class PlaceController
 
     public function deleteAction (Request $request, Application $app, $id)
     {
-        return "deleteAction";
+        /// Checking rights
+
+        $place = new Place();
+        $place->setPlaceId($id);
+        $errors = $this->placeRepository->remove($place);
+
+        if(!isEmpty($errors))
+        {
+            return implode("</br>", $errors);
+        }
+
+        return "deleteAction completed";
     }
 
 }

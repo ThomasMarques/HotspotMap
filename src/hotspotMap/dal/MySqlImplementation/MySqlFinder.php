@@ -101,12 +101,26 @@ class MySqlFinder implements \HotspotMap\dal\IFinder
     }
 
     /**
+     * @param int $begin
+     * @param int $end
+     * @return IFinder
+     */
+    public function limit($begin, $end)
+    {
+        $this->query .= " LIMIT :begin, :end";
+        $this->parameters = array_merge(
+            $this->parameters,
+            array("begin" => $begin, "end" => $end)
+        );
+        return $this;
+    }
+
+    /**
      * @return array
      *      Execute and return search results.
      */
     public function getResults()
     {
-        //print $this->query;
         return $this->connexion->selectQuery($this->query, $this->parameters);
     }
 } 

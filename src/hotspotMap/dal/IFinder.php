@@ -33,6 +33,13 @@ interface IFinder {
     public function where($condition, $params);
 
     /**
+     * @param int $begin
+     * @param int $end
+     * @return IFinder
+     */
+    public function limit($begin, $end);
+
+    /**
      * @param array $fields
      *      example : array(user.displayName, comment.content, place.name)
      * @return IFinder
