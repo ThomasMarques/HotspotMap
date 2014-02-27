@@ -1,13 +1,24 @@
 html { height: 100% }
-body { height: 100%; margin: 0; padding: 0; position:relative }
+body { height: 100%; margin: 0; padding: 0; position:relative; overflow: hidden }
 
 .navbar img {
     height: 30px;
 }
 
+#body {
+    display: hidden;
+    height: 100%;
+}
+
 #content {
+    width: calc( 100% - 35px );
     height: calc( 100% - 90px );
     padding: 0;
+    position: relative;
+}
+
+#loader {
+    display: block;
 }
 
 #wrapper {
@@ -16,21 +27,48 @@ body { height: 100%; margin: 0; padding: 0; position:relative }
     height: 100%;
     float: right;
 
-    transition: all 250ms;
-    -webkit-transition: all 250ms;
-
     -webkit-box-shadow: 0 0 5px 2px #D1D1D1;
     box-shadow: 0 0 5px 2px #D1D1D1;
 
-}
-#wrapper.reduce {
-    width:calc( 100% - 300px );
 }
 
 #map-canvas {
     height: 100%;
 }
 
-#map-canvas.reduce {
+#content section {
+    position: absolute;
+    top: 0;
+    right: -300px;
+    float: left;
+    opacity: 0;
 
+    width: 300px;
+    height: 100%;
+
+    transition: all 250ms;
+    -webkit-transition: all 250ms;
+}
+
+#content section.expand {
+    right: 0;
+    opacity: 1;
+}
+
+#add {
+    background: #fff;
+    overflow: auto;
+    padding: 30px;
+}
+#list {
+}
+
+#list .list-group {
+    overflow: auto;
+    height: 100%;
+}
+
+#list .list-group-item {
+    padding: 30px;
+    opacity: 0.8;
 }

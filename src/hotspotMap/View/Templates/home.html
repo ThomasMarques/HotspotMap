@@ -1,6 +1,6 @@
 <!doctype html>
 
-<html>
+<html ng-app="hotspotmap">
 <!-- Built with Divshot - http://www.divshot.com -->
 
 <head>
@@ -10,38 +10,85 @@
     <link rel="stylesheet" href="css/main.css">
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
     <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.min.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
 </head>
 
-<body>
-<header class="navbar navbar-default">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a href="#" class="navbar-brand"><img src="images/logo.png" alt="devplaces" /></a>
+<body ng-controller="MainCtrl">
+<div id="loader" class="container">loading ...</div>
+<div id="body">
+    <header class="navbar navbar-default">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="#" class="navbar-brand"><img src="images/logo.png" alt="devplaces" /></a>
+            </div>
+            <div class="collapse navbar-collapse">
+                <form class="navbar-form navbar-right">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search">
+                    </div>
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </form>
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li class=""><a href="#" ng-click="toggleAddForm()">Add Places</a></li>
+                    <li class=""><a href="#" ng-click="showNearestLocation()">List</a></li>
+                </ul>
+            </div>
         </div>
-        <div class="collapse navbar-collapse">
-            <form class="navbar-form navbar-right">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Search">
-                </div>
-                <button type="submit" class="btn btn-default">Submit</button>
-            </form>
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li class=""><a href="#" onclick="test()">Add Places</a></li>
-            </ul>
-        </div>
-    </div>
-</header>
+    </header>
 
-<div id="content" class="container">
-    <div id="wrapper">
-    {% include 'places/list.html' %}
+    <div id="content" class="container">
+
+        <div id="wrapper">
+            {% include 'places/list.html' %}
+        </div>
+
+        <section id="add" ng-controller="AddCtrl">
+            <form role="form">
+                <div class="form-group">
+                    <label for="nameInput">Name</label>
+                    <input type="text" class="form-control" id="nameInput" placeholder="Enter Name" ng-model="place.name">
+                </div>
+                <div class="form-group" ng-show="addressDisplayed">
+                    <label for="addressInput">Address</label>
+                    <input type="text" ng-disabled="disabled" class="form-control" id="addressInput" placeholder="Enter Address" ng-focus="addressFocusTrigger()" ng-model="place.address">
+                </div>
+                <div class="form-group" ng-show="addressDisplayed">
+                    <label for="townInput">Town</label>
+                    <input type="text" ng-disabled="disabled" class="form-control" id="townInput" placeholder="Enter Town" ng-focus="addressFocusTrigger()" ng-model="place.town">
+                </div>
+                <div class="form-group" ng-show="addressDisplayed">
+                    <label for="countryInput">Country</label>
+                    <input type="text" ng-disabled="disabled" class="form-control" id="countryInput" placeholder="Enter Country" ng-focus="addressFocusTrigger()" ng-model="place.country">
+                    <hr />
+                </div>
+                <div class="form-group" ng-show="locationDisplayed">
+                    <label for="latInput">Latitude</label>
+                    <input type="text" ng-disabled="disabled" class="form-control" id="latInput" placeholder="Enter Latitude" ng-focus="locationFocusTrigger()" ng-model="place.lat">
+                </div>
+                <div class="form-group" ng-show="locationDisplayed">
+                    <label for="lonInput">Longitude</label>
+                    <input type="text" ng-disabled="disabled" class="form-control" id="lonInput" placeholder="Enter Longitude" ng-focus="locationFocusTrigger()" ng-model="place.lon">
+                </div>
+                <button type="submit" class="btn btn-default" ng-show="!disabled" ng-click="searchPlace()">Search Place to Add</button>
+                <button type="submit" class="btn btn-success" ng-show="disabled" ng-click="addPlace()">Confirm</button>
+                <button type="submit" class="btn btn-warning" ng-click="toggleAddForm()">Cancel</button>
+                <button type="submit" class="btn btn-danger" ng-click="resetAddForm()">Reset</button>
+            </form>
+        </section>
+        <section id="list">
+            <ul class="list-group">
+                <li class="list-group-item" ng-repeat="place in places" ng-click="showPlace(place)">((place.name))</li>
+            </ul>
+        </section>
+
     </div>
 </div>
 
@@ -49,7 +96,7 @@
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC0c4a5S45UhVlPoWW_rse1BkpUU3f4Q7c&sensor=false">
 </script>
 <script type="text/javascript">
-    var pos;
+    /*var pos;
     var pos2;
     var map;
     var mapOptions;
@@ -95,17 +142,22 @@
 
         var options = {
             map: map,
-            position: new google.maps.LatLng(60, 105),
+            position: new google.maps.LatLng('60', '105'),
             content: content
         };
 
         var infowindow = new google.maps.InfoWindow(options);
         map.setCenter(options.position);
-    }
+    }*/
     function test () {
-        $('#wrapper').toggleClass('reduce');
+        $('#content').find('#add').toggleClass('expand');
+        //map.setCenter(pos);
     }
-    google.maps.event.addDomListener(window, 'load', initialize);
+    function test2 () {
+        $('#content').find('#list').toggleClass('expand');
+        //map.setCenter(pos);
+    }
+
 </script>
 </body>
 </html>
