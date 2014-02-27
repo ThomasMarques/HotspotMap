@@ -230,6 +230,7 @@ function MainCtrl($scope, $rootScope, hotspotMainService, placeService) {
 
     $scope.showNearestLocation = function () {
         $scope.places = placeService.places;
+        $("section").not("#list").removeClass('expand');
         $("#list").toggleClass('expand');
     }
 
@@ -238,6 +239,7 @@ function MainCtrl($scope, $rootScope, hotspotMainService, placeService) {
     }
 
     $scope.toggleAddForm = function () {
+        $("section").not("#add").removeClass('expand');
         $("#add").toggleClass('expand');
     }
 
