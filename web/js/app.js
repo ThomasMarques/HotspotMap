@@ -12,18 +12,25 @@ module.factory('iconFactory', ['$rootScope', function($rootScope) {
 
     var serviceInstance = {};
     serviceInstance.type = {
-        'temp': 0,
-        'dev': 63
+        'temp': {
+            size: new google.maps.Size(60, 65),
+            origin: new google.maps.Point(0,-6)
+        },
+        'dev': {
+            size: new google.maps.Size(60, 65),
+            origin: new google.maps.Point(60,-6)
+        },
+        'location': {
+            size: new google.maps.Size(19, 19),
+            origin: new google.maps.Point(140,20),
+            anchor: new google.maps.Point(10, 10)
+        }
     };
 
     serviceInstance.getMarker = function (type, options) {
 
-        var image = {
-            url: 'images/markers.png',
-            size: new google.maps.Size(63, 61),
-            origin: new google.maps.Point(type,0),
-            anchor: new google.maps.Point(31, 57)
-        };
+        type['url'] = 'images/markers.png';
+        var image = type;
         options['icon'] = image;
 
         return new google.maps.Marker(options);
@@ -126,12 +133,27 @@ module.factory('hotspotMainService', ['$rootScope', 'placeService', 'iconFactory
 
     $rootScope.$on(serviceBroadcastKeys.userLocationFound, function($scope) {
 
+        // Geolocalisation
         var options = {
             pos : serviceInstance.userLocation,
             zoom: 8
         }
         serviceInstance.map = new google.maps.Map(document.getElementById("map-canvas"), options);
         serviceInstance.map.setCenter(serviceInstance.userLocation);
+
+        // Location Marker
+        var options = {
+            position: serviceInstance.userLocation,
+            map: serviceInstance.map
+        };
+        iconFactory.getMarker(iconFactory.type.location, options);
+
+        // Current location information
+        var infowindow = new google.maps.InfoWindow({
+            map: serviceInstance.map,
+            position: serviceInstance.userLocation,
+            content: 'Your current location.'
+        });
 
         serviceInstance.setMarkers();
 
