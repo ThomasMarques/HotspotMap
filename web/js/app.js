@@ -8,6 +8,31 @@ var serviceBroadcastKeys = {
     'placeAdded': 2
 };
 
+module.factory('iconFactory', ['$rootScope', function($rootScope) {
+
+    var serviceInstance = {};
+    serviceInstance.type = {
+        'temp': 0,
+        'dev': 63
+    };
+
+    serviceInstance.getMarker = function (type, options) {
+
+        var image = {
+            url: 'images/markers.png',
+            size: new google.maps.Size(63, 61),
+            origin: new google.maps.Point(type,0),
+            anchor: new google.maps.Point(31, 57)
+        };
+        options['icon'] = image;
+
+        return new google.maps.Marker(options);
+
+    }
+
+    return serviceInstance;
+}]);
+
 module.factory('placeService', ['$rootScope', function($rootScope) {
 
     var serviceInstance = {};
@@ -36,7 +61,7 @@ module.factory('placeService', ['$rootScope', function($rootScope) {
 
 }]);
 
-module.factory('hotspotMainService', ['$rootScope', 'placeService', function($rootScope, placeService) {
+module.factory('hotspotMainService', ['$rootScope', 'placeService', 'iconFactory', function($rootScope, placeService, iconFactory) {
 
     var serviceInstance = {};
 
@@ -56,13 +81,15 @@ module.factory('hotspotMainService', ['$rootScope', 'placeService', function($ro
 
     serviceInstance.setMarkers = function () {
         for (var i = 0; i < placeService.places.length; i++) {
+
             var place = placeService.places[i];
-            console.log(place);
-            var marker = new google.maps.Marker({
+            var options = {
                 position: place.pos,
                 map: serviceInstance.map,
                 title: place.name
-            });
+            };
+
+            var marker = iconFactory.getMarker(iconFactory.type.dev, options);
         }
     }
 
@@ -80,11 +107,12 @@ module.factory('hotspotMainService', ['$rootScope', 'placeService', function($ro
 
     serviceInstance.addTempPlace = function (place) {
 
-        var marker = new google.maps.Marker({
+        var options = {
             position: place.pos,
             map: serviceInstance.map,
             title: place.name
-        });
+        };
+        var marker = iconFactory.getMarker(iconFactory.type.temp, options);
         marker.id = place.id;
 
         serviceInstance.tempMarker = marker;
