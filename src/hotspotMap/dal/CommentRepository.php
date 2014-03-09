@@ -42,13 +42,34 @@ class CommentRepository
     /**
      * @return int
      */
-    public function countPlaces()
+    public function countComments()
     {
         $data = $this->finder->select(array("count(*)"))
             ->from(array("Comment"))
             ->getResults();
 
         return intval($data[0]);
+    }
+
+    /**
+     * @param int $page
+     * @param int $limit
+     * @return array of Place
+     */
+    public function findAllByPage($page, $limit)
+    {
+        $data = $this->finder->select(array("*"))
+            ->from(array("Comment"))
+            ->limit(($page-1) * $limit, $page * $limit)
+            ->getResults();
+
+        $comments = [];
+        for( $i = 0 ; $i < sizeof($data) ; ++$i )
+        {
+            $comment = $this->createCommentFromData($data[$i]);
+            $comments[] = $comment;
+        }
+        return $comments;
     }
 
     /**
@@ -81,7 +102,7 @@ class CommentRepository
 
     /**
      * @param \Hotspotmap\model\Comment $comment
-     * @return bool
+     * @return array
      */
     public function remove(\Hotspotmap\model\Comment $comment)
     {
@@ -94,7 +115,7 @@ class CommentRepository
      */
     private function createCommentFromData($commentData  = [])
     {
-        ///`commentId`, `content`, `placeId`, `userId`, `authorDisplayName`
+        ///`commentId`, `content`, `commentId`, `userId`, `authorDisplayName`
         $comment = new \Hotspotmap\model\Comment();
         $comment->setCommentId($commentData[0]);
         $comment->setContent($commentData[1]);

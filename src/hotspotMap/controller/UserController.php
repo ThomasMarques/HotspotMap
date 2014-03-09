@@ -83,9 +83,6 @@ class UserController extends Controller
 
         $user = $this->fillUserWithRequestAttribute($request, $user);
 
-        /// TODO -> TO THINK
-        /// $user->setValidate(false);
-
         $errors = $this->userRepository->save($user);
 
         if(!isEmpty($errors))

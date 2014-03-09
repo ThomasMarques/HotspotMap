@@ -4,6 +4,8 @@ namespace HotspotMap\Controller;
 
 use HotspotMap\dal\DALFactory;
 use HotspotMap\dal\CommentRepository;
+use HotspotMap\dal\UserRepository;
+use HotspotMap\dal\PlaceRepository;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use HotspotMap\model\Comment;
@@ -17,9 +19,21 @@ class CommentController extends Controller
      */
     private $commentRepository;
 
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    /**
+     * @var PlaceRepository
+     */
+    private $placeRepository;
+
     public function __construct()
     {
         $this->commentRepository = DALFactory::getRepository("Comment");
+        $this->userRepository = DALFactory::getRepository("User");
+        $this->placeRepository = DALFactory::getRepository("Place");
     }
 
     public function listAction (Request $request, Application $app, $page = 1)
@@ -83,9 +97,6 @@ class CommentController extends Controller
 
         $comment = $this->fillCommentWithRequestAttribute($request, $comment);
 
-        /// TODO -> TO THINK
-        /// $comment->setValidate(false);
-
         $errors = $this->commentRepository->save($comment);
 
         if(!isEmpty($errors))
@@ -128,13 +139,25 @@ class CommentController extends Controller
      */
     private function fillCommentWithRequestAttribute(Request $request, Comment $comment)
     {
-        $mailAddress = $request->get("mailAddress", null);
-        if(null != $mailAddress)
-            $comment->setMailAddress($mailAddress);
+        $content = $request->get("content", null);
+        if(null != $content)
+            $comment->setContent($content);
 
-        $displayName = $request->get("displayName", null);
-        if(null != $displayName)
-            $comment->setDisplayName($displayName);
+        $authorDisplayName = $request->get("authorDisplayName", null);
+        if(null != $authorDisplayName)
+            $comment->setAuthorDisplayName($authorDisplayName);
+
+        $placeId = $request->get("placeId", null);
+        if(null != $placeId)
+        {
+            $comment->setPlace($this->placeRepository->findOneById(intval($placeId)));
+        }
+
+        $authorId = $request->get("authorId", null);
+        if(null != $authorId)
+        {
+            $comment->setUser($this->userRepository->findOneById(intval($authorId)));
+        }
 
         return $comment;
     }
