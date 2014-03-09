@@ -1,0 +1,12 @@
+ <IfModule mod_rewrite.c>
+    Options -MultiViews
+
+    RewriteEngine On
+    RewriteBase /HotspotMap/web
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [QSA,L]
+
+    <Limit GET POST PUT DELETE>
+        Allow from all
+    </Limit>
+</IfModule>

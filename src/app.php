@@ -53,6 +53,38 @@ $app->put('/places/{id}', 'HotspotMap\Controller\PlaceController::putAction')
 $app->delete('/places/{id}', 'HotspotMap\Controller\PlaceController::deleteAction')
     ->bind('place_delete');
 
+/*
+ * Users Controller
+ */
+$app->get('/', 'HotspotMap\Controller\UserController::listAction')
+    ->bind('home');
+$app->get('/users', 'HotspotMap\Controller\UserController::listAction')
+    ->bind('user_list');
+$app->get('/users/{id}', 'HotspotMap\Controller\UserController::getAction')
+    ->bind('user_get');
+$app->post('/users', 'HotspotMap\Controller\UserController::postAction')
+    ->bind('user_post');
+$app->put('/users/{id}', 'HotspotMap\Controller\UserController::putAction')
+    ->bind('user_put');
+$app->delete('/users/{id}', 'HotspotMap\Controller\UserController::deleteAction')
+    ->bind('user_delete');
+
+/*
+ * Comments Controller
+ */
+$app->get('/', 'HotspotMap\Controller\CommentController::listAction')
+    ->bind('home');
+$app->get('/comments', 'HotspotMap\Controller\CommentController::listAction')
+    ->bind('comment_list');
+$app->get('/comments/{id}', 'HotspotMap\Controller\CommentController::getAction')
+    ->bind('comment_get');
+$app->post('/comments', 'HotspotMap\Controller\CommentController::postAction')
+    ->bind('comment_post');
+$app->put('/comments/{id}', 'HotspotMap\Controller\CommentController::putAction')
+    ->bind('comment_put');
+$app->delete('/comments/{id}', 'HotspotMap\Controller\CommentController::deleteAction')
+    ->bind('comment_delete');
+
 $app->before(function(Request $request) use ($app) {
 
 });

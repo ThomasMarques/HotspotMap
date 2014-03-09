@@ -29,6 +29,18 @@ class UserRepository
     }
 
     /**
+     * @return int
+     */
+    public function countPlaces()
+    {
+        $data = $this->finder->select(array("count(*)"))
+            ->from(array("User"))
+            ->getResults();
+
+        return intval($data[0]);
+    }
+
+    /**
      * @param int $id
      * @return \Hotspotmap\model\User
      */

@@ -27,6 +27,9 @@ class PlaceRepository
         $this->finder = $finder;
     }
 
+    /**
+     * @return int
+     */
     public function countPlaces()
     {
         $data = $this->finder->select(array("count(*)"))
@@ -106,7 +109,7 @@ class PlaceRepository
 
     /**
      * @param \Hotspotmap\model\Place $place
-     * @return bool
+     * @return array
      */
     public function remove(\Hotspotmap\model\Place $place)
     {
