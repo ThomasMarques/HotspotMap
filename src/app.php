@@ -9,7 +9,6 @@ use Silex\Provider\TwigServiceProvider;
 use Hateoas\HateoasBuilder;
 use Hateoas\UrlGenerator\SymfonyUrlGenerator;
 use Hateoas\UrlGenerator\CallableUrlGenerator;
-use Geocoder\Provider\GeocoderServiceProvider;
 
 $app = new Silex\Application();
 $app['mime-types'] = [ 'text/html', 'application/xml', 'application/json' ];
@@ -60,6 +59,38 @@ $app->get('/geoloc/{address}', 'HotspotMap\Controller\GeolocController::findAddr
     ->bind('geolocAddress');
 $app->get('/geoloc/{lat}/{lon}', 'HotspotMap\Controller\GeolocController::findCoordinatesAction')
     ->bind('geolocCoordinates');
+
+/*
+ * Users Controller
+ */
+$app->get('/', 'HotspotMap\Controller\UserController::listAction')
+    ->bind('home');
+$app->get('/users', 'HotspotMap\Controller\UserController::listAction')
+    ->bind('user_list');
+$app->get('/users/{id}', 'HotspotMap\Controller\UserController::getAction')
+    ->bind('user_get');
+$app->post('/users', 'HotspotMap\Controller\UserController::postAction')
+    ->bind('user_post');
+$app->put('/users/{id}', 'HotspotMap\Controller\UserController::putAction')
+    ->bind('user_put');
+$app->delete('/users/{id}', 'HotspotMap\Controller\UserController::deleteAction')
+    ->bind('user_delete');
+
+/*
+ * Comments Controller
+ */
+$app->get('/', 'HotspotMap\Controller\CommentController::listAction')
+    ->bind('home');
+$app->get('/comments', 'HotspotMap\Controller\CommentController::listAction')
+    ->bind('comment_list');
+$app->get('/comments/{id}', 'HotspotMap\Controller\CommentController::getAction')
+    ->bind('comment_get');
+$app->post('/comments', 'HotspotMap\Controller\CommentController::postAction')
+    ->bind('comment_post');
+$app->put('/comments/{id}', 'HotspotMap\Controller\CommentController::putAction')
+    ->bind('comment_put');
+$app->delete('/comments/{id}', 'HotspotMap\Controller\CommentController::deleteAction')
+    ->bind('comment_delete');
 
 $app->before(function(Request $request) use ($app) {
 

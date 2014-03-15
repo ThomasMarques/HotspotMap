@@ -29,6 +29,39 @@ class UserRepository
     }
 
     /**
+     * @return int
+     */
+    public function countUsers()
+    {
+        $data = $this->finder->select(array("count(*)"))
+            ->from(array("User"))
+            ->getResults();
+
+        return intval($data[0]);
+    }
+
+    /**
+     * @param int $page
+     * @param int $limit
+     * @return array of User
+     */
+    public function findAllByPage($page, $limit)
+    {
+        $data = $this->finder->select(array("*"))
+            ->from(array("User"))
+            ->limit(($page-1) * $limit, $page * $limit)
+            ->getResults();
+
+        $users = [];
+        for( $i = 0 ; $i < sizeof($data) ; ++$i )
+        {
+            $user = $this->createUserFromData($data[$i]);
+            $users[] = $user;
+        }
+        return $users;
+    }
+
+    /**
      * @param int $id
      * @return \Hotspotmap\model\User
      */

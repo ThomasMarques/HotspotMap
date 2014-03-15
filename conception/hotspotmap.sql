@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `comment` (
   PRIMARY KEY (`commentId`),
   KEY `userId` (`userId`),
   KEY `placeId` (`placeId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=18 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=0 ;
 
 CREATE TABLE IF NOT EXISTS `place` (
   `placeId` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `place` (
   `submissionDate` date NOT NULL,
   `validate` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`placeId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=56 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=0 ;
 
 CREATE TABLE IF NOT EXISTS `user` (
   `userId` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `displayName` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`userId`),
   UNIQUE KEY `mailAddress` (`mailAddress`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=31 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=0 ;
 
 ALTER TABLE `comment`
   ADD CONSTRAINT `comment_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE,
