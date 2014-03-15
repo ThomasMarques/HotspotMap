@@ -47,6 +47,14 @@ $app->get('/', 'HotspotMap\Controller\PlaceController::listAction')
     ->bind('home');
 $app->get('/places', 'HotspotMap\Controller\PlaceController::listAction')
     ->bind('place_list');
+$app->get('/places/{lat}/{lon}/{distance}', 'HotspotMap\Controller\PlaceController::nearestAction')
+    ->bind('place_nearest');
+$app->get('/places/{address}/{distance}', 'HotspotMap\Controller\PlaceController::nearestAddressAction')
+    ->bind('place_nearestAddress');
+$app->get('/places/{address}', 'HotspotMap\Controller\PlaceController::addressAction')
+    ->bind('place_address');
+$app->get('/places/{lat}/{lon}', 'HotspotMap\Controller\PlaceController::coordinatesAction')
+    ->bind('place_coordinates');
 $app->get('/places/{id}', 'HotspotMap\Controller\PlaceController::getAction')
     ->bind('place_get');
 $app->post('/places', 'HotspotMap\Controller\PlaceController::postAction')
@@ -55,11 +63,6 @@ $app->put('/places/{id}', 'HotspotMap\Controller\PlaceController::putAction')
     ->bind('place_put');
 $app->delete('/places/{id}', 'HotspotMap\Controller\PlaceController::deleteAction')
     ->bind('place_delete');
-
-$app->get('/geoloc/{address}', 'HotspotMap\Controller\GeolocController::findAddressAction')
-    ->bind('geolocAddress');
-$app->get('/geoloc/{lat}/{lon}', 'HotspotMap\Controller\GeolocController::findCoordinatesAction')
-    ->bind('geolocCoordinates');
 
 /*
  * Users Controller

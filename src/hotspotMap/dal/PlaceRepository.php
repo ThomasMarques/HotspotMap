@@ -80,6 +80,36 @@ class PlaceRepository
     }
 
     /**
+     * @param int $latitude
+     * @param int $longitude
+     * @param int $searchDistance
+     * @param int $page
+     * @param int $limit
+     * @return array of Place
+     */
+    public function findNearest($latitude, $longitude, $searchDistance, $page, $limit) {
+
+        $places = $this->findAllByPage($page, $limit);
+
+        $lat = $latitude;
+        $lon = $longitude;
+
+        $result = [];
+        foreach ($places as $place)
+        {
+            $distance = ( 6371 * acos( cos( deg2rad( $lat ) ) * cos( deg2rad( $place->getLatitude() ) )
+                    * cos( deg2rad( $place->getLongitude() ) - deg2rad( $lon ) ) + sin( deg2rad( $lat ) ) * sin(deg2rad( $place->getLatitude() )) ) );
+            if ($distance < $searchDistance)
+            {
+                $result[] = $place;
+            }
+        }
+
+        return $result;
+
+    }
+
+    /**
      * @return array of \Hotspotmap\model\Place
      */
     public function findAllNotValidated()
