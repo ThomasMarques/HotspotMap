@@ -62,7 +62,7 @@ class UserController extends Controller
 
         $errors = $this->userRepository->save($user);
 
-        if(!isEmpty($errors))
+        if(!empty($errors))
         {
             return $this->renderErrors($app, $errors);
         }
@@ -89,7 +89,7 @@ class UserController extends Controller
 
         $errors = $this->userRepository->save($user);
 
-        if(!isEmpty($errors))
+        if(!empty($errors))
         {
             return $this->renderErrors($app, $errors);
         }
@@ -114,7 +114,7 @@ class UserController extends Controller
 
         $errors = $this->userRepository->remove($user);
 
-        if(!isEmpty($errors))
+        if(!empty($errors))
         {
             return $this->renderErrors($app, $errors);
         }

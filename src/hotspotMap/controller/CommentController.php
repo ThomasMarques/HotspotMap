@@ -103,7 +103,7 @@ class CommentController extends Controller
 
         $errors = $this->commentRepository->save($comment);
 
-        if(!isEmpty($errors))
+        if(!empty($errors))
         {
             return $this->renderErrors($app, $errors);
         }
@@ -128,7 +128,7 @@ class CommentController extends Controller
 
         $errors = $this->commentRepository->remove($comment);
 
-        if(!isEmpty($errors))
+        if(!empty($errors))
         {
             return $this->renderErrors($app, $errors);
         }
