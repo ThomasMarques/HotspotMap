@@ -68,11 +68,11 @@ class CommentController extends Controller
         $comment = $this->fillCommentWithRequestAttribute($request, new Comment());
 
         /// Not editable, only fix by us at creation.
-        $comment->setPrivilege(0);
+        //$comment->setPrivilege(0);
 
         $errors = $this->commentRepository->save($comment);
 
-        if(!isEmpty($errors))
+        if(!empty($errors))
         {
             return $this->renderErrors($app, $errors);
         }
