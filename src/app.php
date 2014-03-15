@@ -47,16 +47,19 @@ $app->get('/', 'HotspotMap\Controller\PlaceController::listAction')
     ->bind('home');
 $app->get('/places', 'HotspotMap\Controller\PlaceController::listAction')
     ->bind('place_list');
-$app->get('/places/{lat}/{lon}/{distance}', 'HotspotMap\Controller\PlaceController::nearestAction')
-    ->bind('place_nearest');
-$app->get('/places/{address}/{distance}', 'HotspotMap\Controller\PlaceController::nearestAddressAction')
-    ->bind('place_nearestAddress');
+$app->get('/places/{id}', 'HotspotMap\Controller\PlaceController::getAction')
+    ->assert('id', '\d+')
+    ->bind('place_get');
 $app->get('/places/{address}', 'HotspotMap\Controller\PlaceController::addressAction')
     ->bind('place_address');
+$app->get('/places/{address}/{distance}', 'HotspotMap\Controller\PlaceController::nearestAddressAction')
+    ->assert('distance', '\d+')
+    ->bind('place_nearestAddress');
 $app->get('/places/{lat}/{lon}', 'HotspotMap\Controller\PlaceController::coordinatesAction')
     ->bind('place_coordinates');
-$app->get('/places/{id}', 'HotspotMap\Controller\PlaceController::getAction')
-    ->bind('place_get');
+$app->get('/places/{lat}/{lon}/{distance}', 'HotspotMap\Controller\PlaceController::nearestAction')
+    ->assert('distance', '\d+')
+    ->bind('place_nearest');
 $app->post('/places', 'HotspotMap\Controller\PlaceController::postAction')
     ->bind('place_post');
 $app->put('/places/{id}', 'HotspotMap\Controller\PlaceController::putAction')
@@ -67,11 +70,10 @@ $app->delete('/places/{id}', 'HotspotMap\Controller\PlaceController::deleteActio
 /*
  * Users Controller
  */
-$app->get('/', 'HotspotMap\Controller\UserController::listAction')
-    ->bind('home');
 $app->get('/users', 'HotspotMap\Controller\UserController::listAction')
     ->bind('user_list');
 $app->get('/users/{id}', 'HotspotMap\Controller\UserController::getAction')
+    ->assert('id', '\d+')
     ->bind('user_get');
 $app->post('/users', 'HotspotMap\Controller\UserController::postAction')
     ->bind('user_post');
@@ -83,12 +85,13 @@ $app->delete('/users/{id}', 'HotspotMap\Controller\UserController::deleteAction'
 /*
  * Comments Controller
  */
-$app->get('/', 'HotspotMap\Controller\CommentController::listAction')
-    ->bind('home');
 $app->get('/comments', 'HotspotMap\Controller\CommentController::listAction')
     ->bind('comment_list');
-$app->get('/comments/{id}', 'HotspotMap\Controller\CommentController::getAction')
-    ->bind('comment_get');
+$app->get('/comments/{place}', 'HotspotMap\Controller\CommentController::listForPlaceAction')
+    ->assert('id', '\d+')
+    ->bind('comment_listForPlace');
+/*$app->get('/comments/{id}', 'HotspotMap\Controller\CommentController::getAction')
+    ->bind('comment_get');*/
 $app->post('/comments', 'HotspotMap\Controller\CommentController::postAction')
     ->bind('comment_post');
 $app->put('/comments/{id}', 'HotspotMap\Controller\CommentController::putAction')

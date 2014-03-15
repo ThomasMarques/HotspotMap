@@ -96,7 +96,7 @@ module.factory('commentService', ['$rootScope', '$http', function($rootScope, $h
 
         $http({
             method: 'GET',
-            url: '/comments'
+            url: '/comments/'+id
         }).
         success(function(data, status, headers, config) {
             serviceInstance.comments = data._embedded.comments;
@@ -459,7 +459,17 @@ function AddCtrl($scope, $rootScope, hotspotMainService, placeService, sectionSe
 
         var place = $scope.place;
         if ($scope.addressDisplayed) {
-            placeService.searchPlaceFromAddress(place.address+', '+place.town+', '+place.country, serviceBroadcastKeys.placeFounded);
+            var address = '';
+            if (place.address === undefined) {
+                place.address = '';
+            }
+            if (place.town === undefined) {
+                place.town = '';
+            }
+            if (place.country === undefined) {
+                place.country = '';
+            }
+            placeService.searchPlaceFromAddress(place.address+','+place.town+','+place.country, serviceBroadcastKeys.placeFounded);
         } else if ($scope.locationDisplayed) {
             placeService.searchPlaceFromLocation(new google.maps.LatLng(place.latitude, place.longitude));
         }
@@ -510,7 +520,7 @@ function CommentCtrl($scope, $rootScope, hotspotMainService, placeService, comme
     $scope.comments = {};
 
     $scope.commentsForPlaceId = function (placeId) {
-        commentService.getCommentsForPlaceId(id);
+        commentService.getCommentsForPlaceId(placeId);
     }
 
     $rootScope.$on(serviceBroadcastKeys.commentListFounded, function commentListFounded() {
@@ -622,8 +632,8 @@ function MainCtrl($scope, $rootScope, hotspotMainService, placeService, sectionS
         };
         var marker = iconFactory.getMarker(iconFactory.type.search, options);
         hotspotMainService.markers.push(marker);
-
         hotspotMainService.setMarkers();
+        hotspotMainService.goTo($searchPlace);
 
     });
 
