@@ -11,7 +11,11 @@ var serviceBroadcastKeys = {
     'pickUpLocation': 5,
     'placeFounded': 6,
     'placesFounded': 7,
-    'placesInitialized': 8
+    'placesInitialized': 8,
+    'placeDetailFounded': 9,
+    'commentAdded': 10,
+    'displayCommentList': 11,
+    'commentListFounded': 12
 };
 
 module.factory('sectionService', ['$rootScope', function($rootScope) {
@@ -77,6 +81,31 @@ module.factory('iconFactory', ['$rootScope', function($rootScope) {
     return serviceInstance;
 }]);
 
+module.factory('commentService', ['$rootScope', '$http', function($rootScope, $http) {
+
+    var serviceInstance = {};
+
+    serviceInstance.comments;
+
+    serviceInstance.getCommentsForPlaceId = function (id) {
+
+        $http({
+            method: 'GET',
+            url: '/comments'
+        }).
+        success(function(data, status, headers, config) {
+            serviceInstance.comments = data._embedded.comments;
+            $rootScope.$broadcast( serviceBroadcastKeys.commentListFounded );
+        }).
+        error(function(data, status, headers, config) {
+        });
+
+    }
+
+    return serviceInstance;
+
+}]);
+
 module.factory('placeService', ['$rootScope', '$http', function($rootScope, $http) {
 
     var serviceInstance = {};
@@ -105,11 +134,11 @@ module.factory('placeService', ['$rootScope', '$http', function($rootScope, $htt
         $http({
             method: 'POST',
             url: '/places?' +
-                'name='+place.name+'' +
-                '&latitude='+place.latitude+'' +
-                '&longitude='+place.longitude+'' +
-                '&schedules=07:30 – 21:00' +
-                '&description=ma description' +
+                'name='+place.name +
+                '&latitude='+place.latitude +
+                '&longitude='+place.longitude +
+                '&schedules=' + place.schedules +
+                '&description=' + place.description +
                 '&hotspotType=0' +
                 '&coffee=1' +
                 '&internetAccess=1' +
@@ -120,17 +149,26 @@ module.factory('placeService', ['$rootScope', '$http', function($rootScope, $htt
         success(function(data, status, headers, config) {
 
             console.log(data, status);
+            serviceInstance.places[serviceInstance.places.length-1].place_id = data.place_id;
+            $rootScope.$broadcast( serviceBroadcastKeys.placeAdded );
 
         }).
         error(function(data, status, headers, config) {
         });
 
-        $rootScope.$broadcast( serviceBroadcastKeys.placeAdded );
 
     }
 
     serviceInstance.getPlaceById = function (id) {
-        return {id:id, name:'test', pos:new google.maps.LatLng('45.7714425', '3.1212492')};
+        $http({
+            method: 'GET',
+            url: '/places/'+id
+        }).
+        success(function(data, status, headers, config) {
+            $rootScope.$broadcast( serviceBroadcastKeys.placeDetailFounded, data );
+        }).
+        error(function(data, status, headers, config) {
+        });
     }
 
     serviceInstance.searchPlaceFromLocation = function (pos) {
@@ -177,6 +215,25 @@ module.factory('placeService', ['$rootScope', '$http', function($rootScope, $htt
 
     }
 
+    serviceInstance.addComment = function (comment) {
+        $http({
+            method: 'POST',
+            url: '/comments?' +
+                'content=' + comment.content +
+                '&placeId=' + comment.placeId +
+                '&authorId=1' +
+                '&authorDisplayName=anonymous'
+        }).
+        success(function(data, status, headers, config) {
+
+            console.log(data, status);
+            $rootScope.$broadcast( serviceBroadcastKeys.commentAdded );
+
+        }).
+        error(function(data, status, headers, config) {
+        });
+    }
+
     return serviceInstance;
 
 }]);
@@ -217,6 +274,7 @@ module.factory('hotspotMainService', ['$rootScope', 'placeService', 'iconFactory
             };
 
             var marker = iconFactory.getMarker(iconFactory.type.dev, options);
+            marker.set('id',place.place_id);
         }
     }
 
@@ -269,7 +327,7 @@ module.factory('hotspotMainService', ['$rootScope', 'placeService', 'iconFactory
             title: place.name
         };
         var marker = iconFactory.getMarker(iconFactory.type.temp, options);
-        marker.set("id", place.id);
+        marker.set("id", place.place_id);
 
         serviceInstance.tempMarker = marker;
         serviceInstance.tempPlace = place;
@@ -354,7 +412,11 @@ function AddCtrl($scope, $rootScope, hotspotMainService, placeService, sectionSe
         $scope.disabled = true;
 
         $place.name = $scope.place.name;
-        $scope.place = $place;
+        $scope.place.latitude = $place.latitude;
+        $scope.place.longitude = $place.longitude;
+        $scope.place.address = $place.address;
+        $scope.place.town = $place.town;
+        $scope.place.country = $place.country;
 
         $('#loader').toggleClass('hidden');
 
@@ -375,7 +437,7 @@ function AddCtrl($scope, $rootScope, hotspotMainService, placeService, sectionSe
 
     $scope.addPlace = function () {
 
-        placeService.createPlace(hotspotMainService.tempPlace);
+        placeService.createPlace($scope.place);
         hotspotMainService.removeTempMarker();
         $scope.resetAddForm();
         sectionService.closeSection();
@@ -412,22 +474,58 @@ function AddCtrl($scope, $rootScope, hotspotMainService, placeService, sectionSe
 
 }
 
-function DetailCtrl($scope, $rootScope, hotspotMainService, placeService) {
+function CommentCtrl($scope, $rootScope, hotspotMainService, placeService, commentService, sectionService) {
+
+    $scope.comments = {};
+
+    $scope.commentsForPlaceId = function (placeId) {
+        commentService.getCommentsForPlaceId(id);
+    }
+
+    $rootScope.$on(serviceBroadcastKeys.commentListFounded, function commentListFounded() {
+        $scope.comments = commentService.comments;
+        sectionService.toggleExpandSection("comments");
+    });
+
+}
+
+function DetailCtrl($scope, $rootScope, hotspotMainService, placeService, commentService) {
 
     $scope.place = {
         name: "bonjour"
     };
+    $scope.comment;
 
     $scope.getDetail = function (marker) {
-        var place = placeService.getPlaceById(marker.id);
-        $scope.place = place;
-        $rootScope.$broadcast( serviceBroadcastKeys.displayPlaceDetails, true );
+        placeService.getPlaceById(marker.id);
+    }
+
+    $scope.addComment = function () {
+        $scope.comment.placeId = $scope.place.place_id;
+        placeService.addComment($scope.comment);
+    }
+
+    $scope.seeComments = function () {
+        commentService.getCommentsForPlaceId($scope.place.place_id);
     }
 
     $rootScope.$on(serviceBroadcastKeys.markerClicked, function($broadcastScope, marker) {
         $scope.getDetail(marker);
         // digest modification into angularjs scope
         $scope.$digest();
+    });
+
+    $rootScope.$on(serviceBroadcastKeys.placeDetailFounded, function($broadcastScope, $data) {
+
+        $scope.place = $data;
+        $rootScope.$broadcast( serviceBroadcastKeys.displayPlaceDetails, true );
+
+    });
+
+    $rootScope.$on(serviceBroadcastKeys.commentAdded, function($broadcastScope) {
+
+        $scope.comment = {};
+
     });
 
 }

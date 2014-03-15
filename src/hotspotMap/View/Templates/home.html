@@ -15,7 +15,11 @@
 </head>
 
 <body ng-controller="MainCtrl">
-<div id="loader" class="container">loading ...</div>
+<div id="loader" class="container text-center">
+    <div>
+        ...
+    </div>
+</div>
 <div id="body">
     <header class="navbar navbar-default">
         <div class="container">
@@ -57,7 +61,16 @@
                     <label for="nameInput">Name</label>
                     <input type="text" class="form-control" id="nameInput" placeholder="Enter Name" ng-model="place.name">
                 </div>
+                <div class="form-group">
+                    <label for="descriptionInput">Description</label>
+                    <input type="text" class="form-control" id="descriptionInput" placeholder="Enter place description" ng-model="place.description">
+                </div>
+                <div class="form-group">
+                    <label for="schedulesInput">Schedules</label>
+                    <input type="text" class="form-control" id="schedulesInput" placeholder="7:30 - 21:00" ng-model="place.schedules">
+                </div>
                 <div class="form-group" ng-show="addressDisplayed">
+                    <hr />
                     <label for="addressInput">Address</label>
                     <input type="text" ng-disabled="disabled" class="form-control" id="addressInput" placeholder="Enter Address" ng-focus="addressFocusTrigger()" ng-model="place.address">
                 </div>
@@ -95,10 +108,29 @@
             <span class="glyphicon glyphicon-remove-circle cancel" ng-click="closeSection()"></span>
             <div ng-controller="DetailCtrl" ng-model="place">
                 <div>((place.name))</div>
+                <div>((place.description))</div>
+                <div>((place.schedules))</div>
+                <div>Added on ((place.submission_date))</div>
                 <div class="location">
                     <div class="lat">((place.latitude))</div>
                     <div class="lon">((place.longitude))</div>
                 </div>
+                <form role="form">
+                    <div class="form-group">
+                        <hr />
+                        <label for="commentInput">Comment</label>
+                        <input type="text" class="form-control" id="commentInput" placeholder="Enter a comment" ng-model="comment.content">
+                    </div>
+                    <button type="submit" class="btn btn-success" ng-click="addComment()">Add a comment</button>
+                    <button type="submit" class="btn btn-success" ng-click="seeComments()">See all comments</button>
+                </form>
+            </div>
+        </section>
+        <section id="comments">
+            <div ng-controller="CommentCtrl">
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="comment in comments">((comment.content))</li>
+                </ul>
             </div>
         </section>
     </div>
