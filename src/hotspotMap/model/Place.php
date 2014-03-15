@@ -86,11 +86,6 @@ class Place {
      */
     private $validate;
 
-    /**
-     * @var array
-     */
-    private $comments = [];
-
     public function __construct()
     {
         $this->placeId = null;
@@ -346,21 +341,5 @@ class Place {
     public function getHotspotType()
     {
         return $this->hotspotType;
-    }
-
-    /**
-     * @param array $comments
-     */
-    public function setComments($comments = [])
-    {
-        $this->comments = $comments;
-    }
-
-    /**
-     * @return array
-     */
-    public function getComments()
-    {
-        return $this->comments;
     }
 } 
