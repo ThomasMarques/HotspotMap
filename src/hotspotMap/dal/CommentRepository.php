@@ -92,6 +92,26 @@ class CommentRepository
     }
 
     /**
+     * @param int $placeId
+     * @return array
+     */
+    public function findAllByPlaceId($placeId)
+    {
+        $data = $this->finder->select(array("*"))
+            ->from(array("Comment"))
+            ->where("placeId = :placeId", ["placeId" => $placeId])
+            ->getResults();
+
+        $comments = [];
+        for( $i = 0 ; $i < sizeof($data) ; ++$i )
+        {
+            $comment = $this->createCommentFromData($data[$i]);
+            $comments[] = $comment;
+        }
+        return $comments;
+    }
+
+    /**
      * @param \Hotspotmap\model\Comment $comment
      * @return bool
      */

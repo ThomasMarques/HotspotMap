@@ -18,6 +18,11 @@ class PlaceRepository
     private $finder;
 
     /**
+     * @var CommentRepository
+     */
+    private $commentRepository;
+
+    /**
      * @param \HotspotMap\dal\IPlaceMapper $placeMapper
      * @param \HotspotMap\dal\IFinder $finder
      */
@@ -25,6 +30,7 @@ class PlaceRepository
     {
         $this->placeMapper = $placeMapper;
         $this->finder = $finder;
+        $this->commentRepository = \HotspotMap\dal\DALFactory::getRepository("Comment");
     }
 
     /**
@@ -135,6 +141,8 @@ class PlaceRepository
         $place->setVisitNumber(intval($placeData[12]));
         $place->setSubmissionDate($date = date_create_from_format("Y-m-d", $placeData[13]));
         $place->setValidate(intval($placeData[14]) == 1);
+
+        $place->setComments($this->commentRepository->findAllByPlaceId($place->getPlaceId()));
 
         return $place;
     }
