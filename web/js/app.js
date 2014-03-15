@@ -90,9 +90,18 @@ module.factory('placeService', ['$rootScope', '$http', function($rootScope, $htt
 
         $http({
             method: 'POST',
-            url: '/places',
-            headers: { 'Content-Type': 'application/json' },
-            data: place
+            url: '/places?' +
+                'name='+place.name+'' +
+                '&latitude='+place.pos.k+'' +
+                '&longitude='+place.pos.A+'' +
+                '&schedules=07:30 – 21:00' +
+                '&description=ma description' +
+                '&hotspotType=0' +
+                '&coffee=1' +
+                '&internetAccess=1' +
+                '&placesNumber=5' +
+                '&comfort=1' +
+                '&frequenting=1'
         }).
         success(function(data, status, headers, config) {
 
@@ -112,7 +121,7 @@ module.factory('placeService', ['$rootScope', '$http', function($rootScope, $htt
 
     serviceInstance.searchPlaceFromLocation = function (pos) {
 
-        $http({method: 'GET', url: '/geoloc/'+pos.d.toString().replace('.',',')+'/'+pos.e.toString().replace('.',',')}).
+        $http({method: 'GET', url: '/geoloc/'+pos.k.toString().replace('.',',')+'/'+pos.A.toString().replace('.',',')}).
         success(function(data, status, headers, config) {
 
                 $place = {

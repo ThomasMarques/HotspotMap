@@ -60,7 +60,7 @@ class PlaceController extends Controller
 
         $errors = $this->placeRepository->save($place);
 
-        if(!isEmpty($errors))
+        if(!empty($errors))
         {
             return $this->renderErrors($app, $errors);
         }
@@ -115,7 +115,7 @@ class PlaceController extends Controller
 
         $errors = $this->placeRepository->remove($place);
 
-        if(!isEmpty($errors))
+        if(!empty($errors))
         {
             return $this->renderErrors($app, $errors);
         }

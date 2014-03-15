@@ -9,6 +9,7 @@ use Silex\Provider\TwigServiceProvider;
 use Hateoas\HateoasBuilder;
 use Hateoas\UrlGenerator\SymfonyUrlGenerator;
 use Hateoas\UrlGenerator\CallableUrlGenerator;
+use Geocoder\Provider\GeocoderServiceProvider;
 
 $app = new Silex\Application();
 $app['mime-types'] = [ 'text/html', 'application/xml', 'application/json' ];
