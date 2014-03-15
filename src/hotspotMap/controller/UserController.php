@@ -22,12 +22,16 @@ class UserController extends Controller
         $this->userRepository = DALFactory::getRepository("User");
     }
 
-    public function listAction (Request $request, Application $app, $page = 1)
+    public function listAction (Request $request, Application $app)
     {
-        $limit=20;
+        $argPage = $request->get("page", null);
+        $page = (null != $argPage) ? intval($argPage) : 1;
+
+        $argLimit = $request->get("limit", null);
+        $limit = (null != $argLimit) ? intval($argLimit) : 20;
 
         $users = $this->userRepository->findAllByPage($page, $limit);
-        $total = $this->userRepository->countUsers();
+        $total = ceil($this->userRepository->countUsers() / $limit);
 
         $result = $app['collection-helper']->buildCollection($users, 'user_list', 'users', $page, $limit, $total);
 
@@ -58,7 +62,7 @@ class UserController extends Controller
 
         $errors = $this->userRepository->save($user);
 
-        if(!isEmpty($errors))
+        if(!empty($errors))
         {
             return $this->renderErrors($app, $errors);
         }
@@ -85,7 +89,7 @@ class UserController extends Controller
 
         $errors = $this->userRepository->save($user);
 
-        if(!isEmpty($errors))
+        if(!empty($errors))
         {
             return $this->renderErrors($app, $errors);
         }
@@ -110,7 +114,7 @@ class UserController extends Controller
 
         $errors = $this->userRepository->remove($user);
 
-        if(!isEmpty($errors))
+        if(!empty($errors))
         {
             return $this->renderErrors($app, $errors);
         }

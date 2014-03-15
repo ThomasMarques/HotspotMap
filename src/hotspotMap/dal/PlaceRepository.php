@@ -36,7 +36,7 @@ class PlaceRepository
             ->from(array("Place"))
             ->getResults();
 
-        return intval($data[0]);
+        return intval($data[0][0]);
     }
 
     /**
@@ -48,7 +48,7 @@ class PlaceRepository
     {
         $data = $this->finder->select(array("*"))
             ->from(array("Place"))
-            ->limit(($page-1) * $limit, $page * $limit)
+            ->limit(($page-1) * $limit, $limit)
             ->getResults();
 
         $places = [];

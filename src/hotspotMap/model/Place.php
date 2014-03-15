@@ -336,7 +336,7 @@ class Place {
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getHotspotType()
     {

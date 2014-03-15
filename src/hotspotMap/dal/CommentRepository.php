@@ -48,7 +48,7 @@ class CommentRepository
             ->from(array("Comment"))
             ->getResults();
 
-        return intval($data[0]);
+        return intval($data[0][0]);
     }
 
     /**
@@ -60,7 +60,7 @@ class CommentRepository
     {
         $data = $this->finder->select(array("*"))
             ->from(array("Comment"))
-            ->limit(($page-1) * $limit, $page * $limit)
+            ->limit(($page-1) * $limit, $limit)
             ->getResults();
 
         $comments = [];
@@ -89,6 +89,26 @@ class CommentRepository
             $comment = $this->createCommentFromData($data[0]);
         }
         return $comment;
+    }
+
+    /**
+     * @param int $placeId
+     * @return array
+     */
+    public function findAllByPlaceId($placeId)
+    {
+        $data = $this->finder->select(array("*"))
+            ->from(array("Comment"))
+            ->where("placeId = :placeId", ["placeId" => $placeId])
+            ->getResults();
+
+        $comments = [];
+        for( $i = 0 ; $i < sizeof($data) ; ++$i )
+        {
+            $comment = $this->createCommentFromData($data[$i]);
+            $comments[] = $comment;
+        }
+        return $comments;
     }
 
     /**
