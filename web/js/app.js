@@ -9,7 +9,9 @@ var serviceBroadcastKeys = {
     'markerClicked': 3,
     'displayPlaceDetails' : 4,
     'pickUpLocation': 5,
-    'placeFounded': 6
+    'placeFounded': 6,
+    'placesFounded': 7,
+    'placesInitialized': 8
 };
 
 module.factory('sectionService', ['$rootScope', function($rootScope) {
@@ -79,10 +81,22 @@ module.factory('placeService', ['$rootScope', '$http', function($rootScope, $htt
 
     var serviceInstance = {};
 
-    serviceInstance.places = [
-        {id:1, name:'starbucks', pos:new google.maps.LatLng('45.1425', '2.1212492')},
-        {id:2, name:'soCofee', pos:new google.maps.LatLng('5.11245', '42.1212492')}
-    ];
+    serviceInstance.places = [];
+
+    serviceInstance.getPlaces = function (broadcastKey) {
+
+        $http({
+            method: 'GET',
+            url: '/places'
+        }).
+        success(function(data, status, headers, config) {
+            serviceInstance.places = data._embedded.places;
+            $rootScope.$broadcast( broadcastKey );
+        }).
+        error(function(data, status, headers, config) {
+        });
+
+    }
 
     serviceInstance.createPlace = function (place) {
 
@@ -92,8 +106,8 @@ module.factory('placeService', ['$rootScope', '$http', function($rootScope, $htt
             method: 'POST',
             url: '/places?' +
                 'name='+place.name+'' +
-                '&latitude='+place.pos.k+'' +
-                '&longitude='+place.pos.A+'' +
+                '&latitude='+place.latitude+'' +
+                '&longitude='+place.longitude+'' +
                 '&schedules=07:30 – 21:00' +
                 '&description=ma description' +
                 '&hotspotType=0' +
@@ -125,7 +139,8 @@ module.factory('placeService', ['$rootScope', '$http', function($rootScope, $htt
         success(function(data, status, headers, config) {
 
                 $place = {
-                    pos:new google.maps.LatLng(data.latitude, data.longitude),
+                    latitude:data.latitude,
+                    longitude:data.longitude,
                     address: data.street_number + ' ' + data.street_name,
                     town: data.city,
                     country: data.country
@@ -146,7 +161,8 @@ module.factory('placeService', ['$rootScope', '$http', function($rootScope, $htt
         success(function(data, status, headers, config) {
 
             $place = {
-                pos:new google.maps.LatLng(data.latitude, data.longitude),
+                latitude:data.latitude,
+                longitude:data.longitude,
                 address: data.street_number + ' ' + data.street_name,
                 town: data.city,
                 country: data.country
@@ -190,11 +206,12 @@ module.factory('hotspotMainService', ['$rootScope', 'placeService', 'iconFactory
     }
 
     serviceInstance.setMarkers = function () {
+
         for (var i = 0; i < placeService.places.length; i++) {
 
             var place = placeService.places[i];
             var options = {
-                position: place.pos,
+                position: new google.maps.LatLng(place.latitude, place.longitude),
                 map: serviceInstance.map,
                 title: place.name
             };
@@ -236,18 +253,18 @@ module.factory('hotspotMainService', ['$rootScope', 'placeService', 'iconFactory
         }
         serviceInstance.map = new google.maps.Map(document.getElementById("map-canvas"), options);
 
-        serviceInstance.setMarkers();
+        placeService.getPlaces(serviceBroadcastKeys.placesInitialized);
 
     }
 
     serviceInstance.goTo = function (place) {
-        serviceInstance.map.setCenter(place.pos);
+        serviceInstance.map.setCenter(new google.maps.LatLng(place.latitude, place.longitude));
     }
 
     serviceInstance.addTempPlace = function (place) {
 
         var options = {
-            position: place.pos,
+            position: new google.maps.LatLng(place.latitude, place.longitude),
             map: serviceInstance.map,
             title: place.name
         };
@@ -256,7 +273,7 @@ module.factory('hotspotMainService', ['$rootScope', 'placeService', 'iconFactory
 
         serviceInstance.tempMarker = marker;
         serviceInstance.tempPlace = place;
-        serviceInstance.map.setCenter(place.pos);
+        serviceInstance.map.setCenter(new google.maps.LatLng(place.latitude, place.longitude));
     }
 
     serviceInstance.removeTempMarker = function () {
@@ -288,6 +305,9 @@ module.factory('hotspotMainService', ['$rootScope', 'placeService', 'iconFactory
     });
 
     $rootScope.$on(serviceBroadcastKeys.placeAdded, function($scope) {
+        serviceInstance.setMarkers();
+    });
+    $rootScope.$on(serviceBroadcastKeys.placesInitialized, function() {
         serviceInstance.setMarkers();
     });
 
@@ -348,7 +368,7 @@ function AddCtrl($scope, $rootScope, hotspotMainService, placeService, sectionSe
         if ($scope.addressDisplayed) {
             placeService.searchPlaceFromAddress(place.address+', '+place.town+', '+place.country);
         } else if ($scope.locationDisplayed) {
-            placeService.searchPlaceFromLocation(place.pos);
+            placeService.searchPlaceFromLocation(new google.maps.LatLng(place.latitude, place.longitude));
         }
 
     }
@@ -379,7 +399,8 @@ function AddCtrl($scope, $rootScope, hotspotMainService, placeService, sectionSe
         $scope.locationDisplayed = true;
         $scope.$digest();
 
-        $scope.place.pos = hotspotMainService.currentClickPos;
+        $scope.place.latitude = hotspotMainService.currentClickPos.k;
+        $scope.place.longitude = hotspotMainService.currentClickPos.A;
         $scope.searchPlace();
         $scope.$digest();
 
@@ -418,11 +439,16 @@ function MainCtrl($scope, $rootScope, hotspotMainService, placeService, sectionS
     }
 
     $scope.showNearestLocation = function () {
-        $scope.places = placeService.places;
+        $('#loader').toggleClass('hidden');
+        placeService.getPlaces(serviceBroadcastKeys.placesFounded);
+    }
 
+    $rootScope.$on(serviceBroadcastKeys.placesFounded, function() {
+        $scope.places = placeService.places;
         sectionService.toggleActiveNavState("listNav");
         sectionService.toggleExpandSection("list");
-    }
+        $('#loader').toggleClass('hidden');
+    });
 
     $scope.showPlace = function (place) {
         hotspotMainService.goTo(place);

@@ -72,11 +72,11 @@
                 </div>
                 <div class="form-group" ng-show="locationDisplayed">
                     <label for="latInput">Latitude</label>
-                    <input type="text" ng-disabled="disabled" class="form-control" id="latInput" placeholder="Enter Latitude" ng-focus="locationFocusTrigger()" ng-model="place.pos.d">
+                    <input type="text" ng-disabled="disabled" class="form-control" id="latInput" placeholder="Enter Latitude" ng-focus="locationFocusTrigger()" ng-model="place.latitude">
                 </div>
                 <div class="form-group" ng-show="locationDisplayed">
                     <label for="lonInput">Longitude</label>
-                    <input type="text" ng-disabled="disabled" class="form-control" id="lonInput" placeholder="Enter Longitude" ng-focus="locationFocusTrigger()" ng-model="place.pos.e">
+                    <input type="text" ng-disabled="disabled" class="form-control" id="lonInput" placeholder="Enter Longitude" ng-focus="locationFocusTrigger()" ng-model="place.longitude">
                 </div>
                 <div class="form-group" ng-show="pickupDisplayed">
                     <button type="submit" class="btn btn-success" ng-click="pickTarget()">Pick target on Map</button>
@@ -96,8 +96,8 @@
             <div ng-controller="DetailCtrl" ng-model="place">
                 <div>((place.name))</div>
                 <div class="location">
-                    <div class="lat">((place.pos.d))</div>
-                    <div class="lon">((place.pos.e))</div>
+                    <div class="lat">((place.latitude))</div>
+                    <div class="lon">((place.longitude))</div>
                 </div>
             </div>
         </section>

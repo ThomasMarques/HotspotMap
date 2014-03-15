@@ -136,11 +136,11 @@ class PlaceController extends Controller
 
         $longitude = $request->get("longitude", null);
         if(null != $longitude)
-            $place->setLongitude(intval($longitude));
+            $place->setLongitude($longitude);
 
         $latitude = $request->get("latitude", null);
         if(null != $latitude)
-            $place->setLatitude(intval($latitude));
+            $place->setLatitude($latitude);
 
         $schedules = $request->get("schedules", null);
         if(null != $schedules)
