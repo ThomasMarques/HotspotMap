@@ -11,7 +11,8 @@ var serviceBroadcastKeys = {
     'pickUpLocation': 5,
     'placeFounded': 6,
     'placesFounded': 7,
-    'placesInitialized': 8
+    'placesInitialized': 8,
+    'placeDetailFounded': 9
 };
 
 module.factory('sectionService', ['$rootScope', function($rootScope) {
@@ -130,7 +131,15 @@ module.factory('placeService', ['$rootScope', '$http', function($rootScope, $htt
     }
 
     serviceInstance.getPlaceById = function (id) {
-        return {id:id, name:'test', pos:new google.maps.LatLng('45.7714425', '3.1212492')};
+        $http({
+            method: 'GET',
+            url: '/places/'+id
+        }).
+        success(function(data, status, headers, config) {
+            $rootScope.$broadcast( serviceBroadcastKeys.placeDetailFounded, data );
+        }).
+        error(function(data, status, headers, config) {
+        });
     }
 
     serviceInstance.searchPlaceFromLocation = function (pos) {
@@ -217,6 +226,7 @@ module.factory('hotspotMainService', ['$rootScope', 'placeService', 'iconFactory
             };
 
             var marker = iconFactory.getMarker(iconFactory.type.dev, options);
+            marker.set('id',place.place_id);
         }
     }
 
@@ -269,7 +279,7 @@ module.factory('hotspotMainService', ['$rootScope', 'placeService', 'iconFactory
             title: place.name
         };
         var marker = iconFactory.getMarker(iconFactory.type.temp, options);
-        marker.set("id", place.id);
+        marker.set("id", place.place_id);
 
         serviceInstance.tempMarker = marker;
         serviceInstance.tempPlace = place;
@@ -419,15 +429,20 @@ function DetailCtrl($scope, $rootScope, hotspotMainService, placeService) {
     };
 
     $scope.getDetail = function (marker) {
-        var place = placeService.getPlaceById(marker.id);
-        $scope.place = place;
-        $rootScope.$broadcast( serviceBroadcastKeys.displayPlaceDetails, true );
+        placeService.getPlaceById(marker.id);
     }
 
     $rootScope.$on(serviceBroadcastKeys.markerClicked, function($broadcastScope, marker) {
         $scope.getDetail(marker);
         // digest modification into angularjs scope
         $scope.$digest();
+    });
+
+    $rootScope.$on(serviceBroadcastKeys.placeDetailFounded, function($broadcastScope, $data) {
+
+        $scope.place = $data;
+        $rootScope.$broadcast( serviceBroadcastKeys.displayPlaceDetails, true );
+
     });
 
 }
