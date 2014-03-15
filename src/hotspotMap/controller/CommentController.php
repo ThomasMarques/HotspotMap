@@ -36,12 +36,16 @@ class CommentController extends Controller
         $this->placeRepository = DALFactory::getRepository("Place");
     }
 
-    public function listAction (Request $request, Application $app, $page = 1)
+    public function listAction (Request $request, Application $app)
     {
-        $limit=20;
+        $argPage = $request->get("page", null);
+        $page = (null != $argPage) ? intval($argPage) : 1;
+
+        $argLimit = $request->get("limit", null);
+        $limit = (null != $argLimit) ? intval($argLimit) : 20;
 
         $comments = $this->commentRepository->findAllByPage($page, $limit);
-        $total = $this->commentRepository->countComments();
+        $total = ceil($this->commentRepository->countComments() / $limit);
 
         $result = $app['collection-helper']->buildCollection($comments, 'comment_list', 'comments', $page, $limit, $total);
 

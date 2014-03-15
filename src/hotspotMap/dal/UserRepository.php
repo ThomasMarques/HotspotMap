@@ -37,7 +37,7 @@ class UserRepository
             ->from(array("User"))
             ->getResults();
 
-        return intval($data[0]);
+        return intval($data[0][0]);
     }
 
     /**
@@ -49,7 +49,7 @@ class UserRepository
     {
         $data = $this->finder->select(array("*"))
             ->from(array("User"))
-            ->limit(($page-1) * $limit, $page * $limit)
+            ->limit(($page-1) * $limit, $limit)
             ->getResults();
 
         $users = [];

@@ -22,12 +22,16 @@ class PlaceController extends Controller
         $this->placeRepository = DALFactory::getRepository("Place");
     }
 
-    public function listAction (Request $request, Application $app, $page = 1)
+    public function listAction (Request $request, Application $app)
     {
-        $limit=20;
+        $argPage = $request->get("page", null);
+        $page = (null != $argPage) ? intval($argPage) : 1;
+
+        $argLimit = $request->get("limit", null);
+        $limit = (null != $argLimit) ? intval($argLimit) : 20;
 
         $places = $this->placeRepository->findAllByPage($page, $limit);
-        $total = $this->placeRepository->countPlaces();
+        $total = ceil($this->placeRepository->countPlaces() / $limit);
 
         $result = $app['collection-helper']->buildCollection($places, 'place_list', 'places', $page, $limit, $total);
 
