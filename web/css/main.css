@@ -19,6 +19,14 @@ body { height: 100%; margin: 0; padding: 0; position:relative; overflow: hidden 
 
 #loader {
     display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 200;
+    background: white;
+    opacity: 0.8;
 }
 
 #wrapper {
@@ -55,11 +63,23 @@ body { height: 100%; margin: 0; padding: 0; position:relative; overflow: hidden 
     opacity: 1;
 }
 
+#content section > div {
+    position: relative;
+    height: 100%;
+}
+
 #add {
     background: #fff;
     overflow: auto;
     padding: 30px;
 }
+section .cancel {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 10px;
+}
+
 #list {
 }
 
@@ -71,4 +91,34 @@ body { height: 100%; margin: 0; padding: 0; position:relative; overflow: hidden 
 #list .list-group-item {
     padding: 30px;
     opacity: 0.8;
+}
+
+#detail {
+    background: #fff;
+    overflow: hidden;
+    padding: 30px;
+}
+
+#detail .location {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    opacity: 0.1;
+    font-size: 1em;
+}
+
+#detail .lat {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
+}
+#detail .lon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
 }

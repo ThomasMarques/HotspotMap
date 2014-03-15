@@ -64,7 +64,7 @@ class PlaceController extends Controller
 
         $errors = $this->placeRepository->save($place);
 
-        if(!isEmpty($errors))
+        if(!empty($errors))
         {
             return $this->renderErrors($app, $errors);
         }
@@ -119,7 +119,7 @@ class PlaceController extends Controller
 
         $errors = $this->placeRepository->remove($place);
 
-        if(!isEmpty($errors))
+        if(!empty($errors))
         {
             return $this->renderErrors($app, $errors);
         }
@@ -140,11 +140,11 @@ class PlaceController extends Controller
 
         $longitude = $request->get("longitude", null);
         if(null != $longitude)
-            $place->setLongitude(intval($longitude));
+            $place->setLongitude($longitude);
 
         $latitude = $request->get("latitude", null);
         if(null != $latitude)
-            $place->setLatitude(intval($latitude));
+            $place->setLatitude($latitude);
 
         $schedules = $request->get("schedules", null);
         if(null != $schedules)

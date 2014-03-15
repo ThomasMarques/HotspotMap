@@ -4,6 +4,8 @@
         "friendsofsymfony/rest-bundle": "dev-master",
         "willdurand/hateoas": "@stable",
         "willdurand/negotiation": "@stable",
+        "willdurand/geocoder": "@stable",
+        "geocoder-php/geocoder-service-provider": "@stable",
         "twig/twig": ">=1.8,<2.0-dev"
     },
     "autoload": {

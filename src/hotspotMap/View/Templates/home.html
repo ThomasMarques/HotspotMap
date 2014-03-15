@@ -35,10 +35,10 @@
                     </div>
                     <button type="submit" class="btn btn-default">Submit</button>
                 </form>
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">Home</a></li>
-                    <li class=""><a href="#" ng-click="toggleAddForm()">Add Places</a></li>
-                    <li class=""><a href="#" ng-click="showNearestLocation()">List</a></li>
+                <ul id="navigation" class="nav navbar-nav">
+                    <li id="homeNav" ng-click="home()"><a href="#">Home</a></li>
+                    <li id="addNav" ng-click="toggleAddForm()"><a href="#">Add Places</a></li>
+                    <li id="listNav" ng-click="showNearestLocation()"><a href="#">List</a></li>
                 </ul>
             </div>
         </div>
@@ -50,8 +50,9 @@
             {% include 'places/list.html' %}
         </div>
 
-        <section id="add" ng-controller="AddCtrl">
-            <form role="form">
+        <section id="add">
+            <span class="glyphicon glyphicon-remove-circle cancel" ng-click="closeSection()"></span>
+            <form role="form" ng-controller="AddCtrl">
                 <div class="form-group">
                     <label for="nameInput">Name</label>
                     <input type="text" class="form-control" id="nameInput" placeholder="Enter Name" ng-model="place.name">
@@ -71,16 +72,18 @@
                 </div>
                 <div class="form-group" ng-show="locationDisplayed">
                     <label for="latInput">Latitude</label>
-                    <input type="text" ng-disabled="disabled" class="form-control" id="latInput" placeholder="Enter Latitude" ng-focus="locationFocusTrigger()" ng-model="place.lat">
+                    <input type="text" ng-disabled="disabled" class="form-control" id="latInput" placeholder="Enter Latitude" ng-focus="locationFocusTrigger()" ng-model="place.latitude">
                 </div>
                 <div class="form-group" ng-show="locationDisplayed">
                     <label for="lonInput">Longitude</label>
-                    <input type="text" ng-disabled="disabled" class="form-control" id="lonInput" placeholder="Enter Longitude" ng-focus="locationFocusTrigger()" ng-model="place.lon">
+                    <input type="text" ng-disabled="disabled" class="form-control" id="lonInput" placeholder="Enter Longitude" ng-focus="locationFocusTrigger()" ng-model="place.longitude">
+                </div>
+                <div class="form-group" ng-show="pickupDisplayed">
+                    <button type="submit" class="btn btn-success" ng-click="pickTarget()">Pick target on Map</button>
                 </div>
                 <button type="submit" class="btn btn-default" ng-show="!disabled" ng-click="searchPlace()">Search Place to Add</button>
                 <button type="submit" class="btn btn-success" ng-show="disabled" ng-click="addPlace()">Confirm</button>
-                <button type="submit" class="btn btn-warning" ng-click="toggleAddForm()">Cancel</button>
-                <button type="submit" class="btn btn-danger" ng-click="resetAddForm()">Reset</button>
+                <button type="submit" class="btn btn-danger" ng-show="!locationDisplayed || !addressDisplayed || disabled" ng-click="resetAddForm()">Reset</button>
             </form>
         </section>
         <section id="list">
@@ -88,7 +91,16 @@
                 <li class="list-group-item" ng-repeat="place in places" ng-click="showPlace(place)">((place.name))</li>
             </ul>
         </section>
-
+        <section id="detail">
+            <span class="glyphicon glyphicon-remove-circle cancel" ng-click="closeSection()"></span>
+            <div ng-controller="DetailCtrl" ng-model="place">
+                <div>((place.name))</div>
+                <div class="location">
+                    <div class="lat">((place.latitude))</div>
+                    <div class="lon">((place.longitude))</div>
+                </div>
+            </div>
+        </section>
     </div>
 </div>
 
