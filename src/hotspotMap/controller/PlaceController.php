@@ -74,11 +74,6 @@ class PlaceController extends Controller
 
     public function putAction (Request $request, Application $app, $id)
     {
-        /// Checking rights
-        /// Only Author, moderator and admin
-        /// 401 if not connected
-        /// 405 if connected but not allowed
-
         $place = $this->placeRepository->findOneById($id);
 
         if(null == $place)
@@ -88,9 +83,6 @@ class PlaceController extends Controller
         }
 
         $place = $this->fillPlaceWithRequestAttribute($request, $place);
-
-        /// TODO -> TO THINK
-        /// $place->setValidate(false);
 
         $errors = $this->placeRepository->save($place);
 
@@ -104,11 +96,6 @@ class PlaceController extends Controller
 
     public function deleteAction (Request $request, Application $app, $id)
     {
-        /// Checking rights
-        /// Only Author, moderator and admin
-        /// 401 if not connected
-        /// 405 if connected but not allowed
-
         $place = $this->placeRepository->findOneById($id);
 
         if(null == $place)
@@ -179,5 +166,15 @@ class PlaceController extends Controller
             $place->setFrequenting(intval($frequenting));
 
         return $place;
+    }
+
+    public function adminListAction (Request $request, Application $app)
+    {
+        return "adminListAction";
+    }
+
+    public function validateAction (Request $request, Application $app, $id)
+    {
+        return "validateAction";
     }
 }

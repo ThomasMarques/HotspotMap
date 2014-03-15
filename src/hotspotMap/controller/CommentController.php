@@ -71,9 +71,6 @@ class CommentController extends Controller
     {
         $comment = $this->fillCommentWithRequestAttribute($request, new Comment());
 
-        /// Not editable, only fix by us at creation.
-        //$comment->setPrivilege(0);
-
         $errors = $this->commentRepository->save($comment);
 
         if(!empty($errors))
@@ -86,11 +83,6 @@ class CommentController extends Controller
 
     public function putAction (Request $request, Application $app, $id)
     {
-        /// Checking rights
-        /// Only Author, moderator and admin
-        /// 401 if not connected
-        /// 405 if connected but not allowed
-
         $comment = $this->commentRepository->findOneById($id);
 
         if(null == $comment)
@@ -113,11 +105,6 @@ class CommentController extends Controller
 
     public function deleteAction (Request $request, Application $app, $id)
     {
-        /// Checking rights
-        /// Only Author, moderator and admin
-        /// 401 if not connected
-        /// 405 if connected but not allowed
-
         $comment = $this->commentRepository->findOneById($id);
 
         if(null == $comment)

@@ -37,6 +37,9 @@ class UserRepositoryUnitTest extends \PHPUnit_Framework_TestCase
         /// Insertion with null address
         $user->setPrivilege(0);
         $user->setDisplayName("Display Name");
+        $user->setRoles(array('ROLE_ADMIN'));
+        $user->setSalt("salt");
+        $user->setPassword("pass");
         $errors = self::$userRepository->save($user);
 
         $this->assertNotEmpty($errors);
@@ -75,6 +78,9 @@ class UserRepositoryUnitTest extends \PHPUnit_Framework_TestCase
         $user->setPrivilege(0);
         $user->setDisplayName("Display Name");
         $user->setMailAddress("good@address.fr");
+        $user->setRoles(array('ROLE_ADMIN'));
+        $user->setSalt("salt");
+        $user->setPassword("pass");
         self::$userRepository->save($user);
         ///
 
@@ -100,6 +106,9 @@ class UserRepositoryUnitTest extends \PHPUnit_Framework_TestCase
         $user->setPrivilege(0);
         $user->setDisplayName("Display Name");
         $user->setMailAddress("good@address.fr");
+        $user->setRoles(array('ROLE_ADMIN'));
+        $user->setSalt("salt");
+        $user->setPassword("pass");
         self::$userRepository->save($user);
         ///
 

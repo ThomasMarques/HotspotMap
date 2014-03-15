@@ -2,7 +2,6 @@
 
 namespace HotspotMap\dal;
 
-
 abstract class IUserMapper
 {
     /**

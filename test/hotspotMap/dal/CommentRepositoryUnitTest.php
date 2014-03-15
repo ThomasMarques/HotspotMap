@@ -129,7 +129,6 @@ class CommentRepositoryUnitTest extends \PHPUnit_Framework_TestCase
 
         /// Verification that the comment has been added to the place.
         $comments = self::$commentRepository->findAllByPlaceId($place->getPlaceId());
-        print_r($comments);
         $this->assertNotEmpty($comments);
         ///
     }

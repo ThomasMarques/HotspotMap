@@ -2,20 +2,14 @@
 
 namespace HotspotMap\model;
 
+use Symfony\Component\Security\Core\User\UserInterface;
 use Hateoas\Configuration\Annotation as Hateoas;
 use JMS\Serializer\Annotation as Serializer;
-
-abstract class Privilege
-{
-    const user = 0;
-    const moderator = 1;
-    const Administrator = 2;
-}
 
 /**
  * @Hateoas\Relation("self", href = "expr('/users/' ~ object.getUserId())")
  */
-class User {
+class User implements UserInterface {
 
     /**
      * @var int
@@ -25,17 +19,27 @@ class User {
     /**
      * @var string
      */
-    private $mailAddress;
-
-    /**
-     * @var int Privilege
-     */
-    private $privilege;
+        private $mailAddress;
 
     /**
      * @var string
      */
     private $displayName;
+
+    /**
+     * @var string
+     */
+    private $salt;
+
+    /**
+     * @var string
+     */
+    private $password;
+
+    /**
+     * @var array
+     */
+    private $roles = [];
 
     public function __construct()
     {
@@ -107,5 +111,46 @@ class User {
     public function setDisplayName($displayName)
     {
         $this->displayName = $displayName;
+    }
+
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+
+    public function setRoles($roles)
+    {
+        $this->roles = $roles;
+    }
+
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    public function setPassword($password)
+    {
+        $this->password = $password;
+    }
+
+    public function getSalt()
+    {
+        return $this->salt;
+    }
+
+    public function setSalt($salt)
+    {
+        $this->salt = $salt;
+    }
+
+    public function getUsername()
+    {
+        return $this->mailAddress;
+    }
+
+    public function eraseCredentials()
+    {
+        $this->setPassword(null);
+        $this->setSalt(null);
     }
 } 

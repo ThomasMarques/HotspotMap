@@ -2,6 +2,7 @@
     "require": {
         "silex/silex": "~1.1",
         "friendsofsymfony/rest-bundle": "dev-master",
+        "symfony/security": "~2.3",
         "willdurand/hateoas": "@stable",
         "willdurand/negotiation": "@stable",
         "willdurand/geocoder": "@stable",

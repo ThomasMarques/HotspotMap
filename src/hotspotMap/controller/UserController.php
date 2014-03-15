@@ -72,11 +72,6 @@ class UserController extends Controller
 
     public function putAction (Request $request, Application $app, $id)
     {
-        /// Checking rights
-        /// Only Author, moderator and admin
-        /// 401 if not connected
-        /// 405 if connected but not allowed
-
         $user = $this->userRepository->findOneById($id);
 
         if(null == $user)
@@ -99,11 +94,6 @@ class UserController extends Controller
 
     public function deleteAction (Request $request, Application $app, $id)
     {
-        /// Checking rights
-        /// Only Author, moderator and admin
-        /// 401 if not connected
-        /// 405 if connected but not allowed
-
         $user = $this->userRepository->findOneById($id);
 
         if(null == $user)

@@ -40,6 +40,38 @@ $app->register(new TwigServiceProvider(), array(
 
 $app->register(new GeocoderServiceProvider());
 
+$app['security.firewalls'] = array(
+    'login' => array(
+        'pattern' => '^/login$',
+        'anonymous' => true,
+    ),
+    'secured' => array(
+        'anonymous' => true,
+        'form' => array('login_path' => '/login', 'check_path' => '/admin/login_check'),
+        'logout' => array('logout_path' => '/logout'),
+        'users' => $app->share(function () use ($app) {
+                return $app['UserMapper'];
+            }),
+    )
+);
+
+$app['security.access_rules'] = array(
+    array('^/admin', 'ROLE_ADMIN'),
+);
+
+$app->register(new Silex\Provider\SessionServiceProvider());
+$app->register(new Silex\Provider\SecurityServiceProvider(), array(
+    'security.firewalls' => $app['security.firewalls'],
+    'security.access_rules' => $app['security.access_rules']
+));
+
+/// Login page
+$app->get('/login', function (Request $request) use ($app) {
+    return $app['twig']->render('users/login.html', array(
+        'error'         => $app['security.last_error']($request)
+    ));
+});
+
 /*
  * Places Controller
  */
@@ -51,10 +83,14 @@ $app->get('/places/{id}', 'HotspotMap\Controller\PlaceController::getAction')
     ->bind('place_get');
 $app->post('/places', 'HotspotMap\Controller\PlaceController::postAction')
     ->bind('place_post');
-$app->put('/places/{id}', 'HotspotMap\Controller\PlaceController::putAction')
+$app->put('/admin/places/{id}', 'HotspotMap\Controller\PlaceController::putAction')
     ->bind('place_put');
-$app->delete('/places/{id}', 'HotspotMap\Controller\PlaceController::deleteAction')
+$app->delete('/admin/places/{id}', 'HotspotMap\Controller\PlaceController::deleteAction')
     ->bind('place_delete');
+$app->get('/admin/places}', 'HotspotMap\Controller\PlaceController::adminListAction')
+    ->bind('admin_place_list');
+$app->get('/admin/places/{id}', 'HotspotMap\Controller\PlaceController::validateAction')
+    ->bind('validate');
 
 $app->get('/geoloc/{address}', 'HotspotMap\Controller\GeolocController::findAddressAction')
     ->bind('geolocAddress');
@@ -72,9 +108,9 @@ $app->get('/users/{id}', 'HotspotMap\Controller\UserController::getAction')
     ->bind('user_get');
 $app->post('/users', 'HotspotMap\Controller\UserController::postAction')
     ->bind('user_post');
-$app->put('/users/{id}', 'HotspotMap\Controller\UserController::putAction')
+$app->put('/admin/users/{id}', 'HotspotMap\Controller\UserController::putAction')
     ->bind('user_put');
-$app->delete('/users/{id}', 'HotspotMap\Controller\UserController::deleteAction')
+$app->delete('/admin/users/{id}', 'HotspotMap\Controller\UserController::deleteAction')
     ->bind('user_delete');
 
 /*
@@ -88,9 +124,9 @@ $app->get('/comments/{id}', 'HotspotMap\Controller\CommentController::getAction'
     ->bind('comment_get');
 $app->post('/comments', 'HotspotMap\Controller\CommentController::postAction')
     ->bind('comment_post');
-$app->put('/comments/{id}', 'HotspotMap\Controller\CommentController::putAction')
+$app->put('/admin/comments/{id}', 'HotspotMap\Controller\CommentController::putAction')
     ->bind('comment_put');
-$app->delete('/comments/{id}', 'HotspotMap\Controller\CommentController::deleteAction')
+$app->delete('/admin/comments/{id}', 'HotspotMap\Controller\CommentController::deleteAction')
     ->bind('comment_delete');
 
 $app->before(function(Request $request) use ($app) {

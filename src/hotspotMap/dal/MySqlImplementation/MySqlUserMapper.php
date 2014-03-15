@@ -37,8 +37,8 @@ class MySqlUserMapper extends \HotspotMap\dal\IUserMapper
                 // Insert
                 $query = <<<SQL
 INSERT INTO User
-(userId, mailAddress, privilege, displayName)
-VALUES (NULL, :mailAddress, :privilege, :displayName)
+(userId, mailAddress, displayName, password, salt, roles)
+VALUES (NULL, :mailAddress, :displayName, :password, :salt, :roles)
 SQL;
             }
             else
@@ -47,8 +47,10 @@ SQL;
                 $query = <<<SQL
 UPDATE User
 SET mailAddress = :mailAddress,
-privilege = :privilege,
-displayName = :displayName
+displayName = :displayName,
+password = :password,
+salt = :salt,
+roles = :roles
 WHERE userId = :userId
 SQL;
                 $parameters["userId"] = $user->getUserId();
@@ -56,8 +58,10 @@ SQL;
 
             /// Filling all parameters
             $parameters["mailAddress"] = $user->getMailAddress();
-            $parameters["privilege"] = $user->getPrivilege();
             $parameters["displayName"] = $user->getDisplayName();
+            $parameters["password"] = $user->getDisplayName();
+            $parameters["salt"] = $user->getSalt();
+            $parameters["roles"] = implode(",", $user->getRoles());
             ///
 
             $success = $this->connexion->executeQuery($query, $parameters);

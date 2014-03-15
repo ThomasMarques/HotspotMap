@@ -4,9 +4,14 @@ namespace HotspotMap\dal;
 
 require_once "IUserMapper.php";
 require_once "IFinder.php";
-require_once __DIR__ . "/../model/User.php";
 
-class UserRepository
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
+use HotspotMap\model\User;
+use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+
+class UserRepository implements UserProviderInterface
 {
     /**
      * @var \HotspotMap\dal\IUserMapper
@@ -63,11 +68,11 @@ class UserRepository
 
     /**
      * @param int $id
-     * @return \Hotspotmap\model\User
+     * @return User
      */
     public function findOneById($id)
     {
-        $data = $this->finder->select(array("userId", "mailAddress", "privilege", "displayName"))
+        $data = $this->finder->select(array("*"))
             ->from(array("user"))
             ->where("userId = :userId", ["userId" => $id])
             ->getResults();
@@ -80,35 +85,78 @@ class UserRepository
         return $user;
     }
 
+    public function findByMailAddress($mailAddress)
+    {
+        $data = $this->finder->select(array("*"))
+            ->from(array("user"))
+            ->where("mailAddress = :mailAddress", ["mailAddress" => $mailAddress])
+            ->getResults();
+
+        $user = null;
+        if(sizeof($data) == 1)
+        {
+            $user = $this->createUserFromData($data[0]);
+        }
+        return $user;
+    }
+
     /**
-     * @param \Hotspotmap\model\User $user
+     * @param User $user
      * @return array
      */
-    public function save(\Hotspotmap\model\User $user)
+    public function save(User $user)
     {
         return $this->userMapper->persist($user);
     }
 
     /**
-     * @param \Hotspotmap\model\User $user
+     * @param User $user
      * @return array
      */
-    public function remove(\Hotspotmap\model\User $user)
+    public function remove(User $user)
     {
         return $this->userMapper->remove($user);
     }
 
+    /// UserProviderInterface
+    public function loadUserByUsername($mailAddress)
+    {
+        $user = $this->findByMailAddress($mailAddress);
+
+        if($user == null)
+            throw new UsernameNotFoundException(sprintf('Mail address "%s" does not exist.', $mailAddress));
+
+        return $user;
+    }
+
+    public function refreshUser(UserInterface $user)
+    {
+        if (!$user instanceof User) {
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($user)));
+        }
+
+        return $this->loadUserByUsername($user->getUsername());
+    }
+
+    public function supportsClass($class)
+    {
+        return $class === 'HotspotMap\model\User';
+    }
+
     /**
      * @param array $userData
-     * @return \Hotspotmap\model\User
+     * @return User
      */
     private function createUserFromData($userData  = [])
     {
-        $user = new \Hotspotmap\model\User();
+        $user = new User();
         $user->setUserId($userData[0]);
         $user->setMailAddress($userData[1]);
-        $user->setPrivilege(intval($userData[2]));
-        $user->setDisplayName($userData[3]);
+        $user->setDisplayName($userData[2]);
+        $user->setPassword($userData[3]);
+        $user->setSalt($userData[4]);
+        $user->setRoles(explode(",", $userData[5]));
+
         return $user;
     }
 } 
