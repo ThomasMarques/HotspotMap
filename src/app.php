@@ -9,6 +9,7 @@ use Silex\Provider\TwigServiceProvider;
 use Hateoas\HateoasBuilder;
 use Hateoas\UrlGenerator\SymfonyUrlGenerator;
 use Hateoas\UrlGenerator\CallableUrlGenerator;
+use Geocoder\Provider\GeocoderServiceProvider;
 
 $app = new Silex\Application();
 $app['mime-types'] = [ 'text/html', 'application/xml', 'application/json' ];
@@ -37,6 +38,8 @@ $app->register(new TwigServiceProvider(), array(
     'twig.path' => __DIR__.'/HotspotMap/View/Templates/',
 ));
 
+$app->register(new GeocoderServiceProvider());
+
 /*
  * Places Controller
  */
@@ -53,6 +56,22 @@ $app->put('/places/{id}', 'HotspotMap\Controller\PlaceController::putAction')
 $app->delete('/places/{id}', 'HotspotMap\Controller\PlaceController::deleteAction')
     ->bind('place_delete');
 
+$app->get('/geoloc/{address}', 'HotspotMap\Controller\GeolocController::findAddressAction')
+    ->bind('geolocAddress');
+$app->get('/geoloc/{lat}/{lon}', 'HotspotMap\Controller\GeolocController::findCoordinatesAction')
+    ->bind('geolocCoordinates');
+
 $app->before(function(Request $request) use ($app) {
+
+
+    $app['geocoder.adapter']  = new \Geocoder\HttpAdapter\CurlHttpAdapter();
+    $chain    = new \Geocoder\Provider\ChainProvider(array(
+        new \Geocoder\Provider\GoogleMapsProvider($app['geocoder.adapter'], 'fr_FR', 'France', true)
+    ));
+    $app['geocoder.provider'] = $chain;
+
+
+    date_default_timezone_set('Europe/Paris');
+
 
 });
