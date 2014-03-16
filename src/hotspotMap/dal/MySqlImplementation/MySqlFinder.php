@@ -43,6 +43,7 @@ class MySqlFinder implements \HotspotMap\dal\IFinder
             {
                 $this->query .= ", " . $fieldsArray[$i];
             }
+            $this->parameters = array();
         }
         return $this;
     }
