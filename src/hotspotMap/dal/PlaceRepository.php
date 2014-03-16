@@ -100,7 +100,7 @@ class PlaceRepository
 
     /**
      * @param \Hotspotmap\model\Place $place
-     * @return bool
+     * @return array
      */
     public function save(\Hotspotmap\model\Place $place)
     {

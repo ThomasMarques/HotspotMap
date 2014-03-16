@@ -170,11 +170,33 @@ class PlaceController extends Controller
 
     public function adminListAction (Request $request, Application $app)
     {
-        return "adminListAction";
+        $places = $this->placeRepository->findAllNotValidated();
+        $size = sizeof($places);
+
+        $result = $app['collection-helper']->buildCollection($places, 'place_list', 'places', 1, $size, $size);
+
+        return $app['renderer']->render($app, 200, $result);
     }
 
     public function validateAction (Request $request, Application $app, $id)
     {
-        return "validateAction";
+        $place = $this->placeRepository->findOneById($id);
+
+        if(null == $place)
+        {
+            $errors[] = "No place found with id : " . $id;
+            return $this->renderErrors($app, $errors);
+        }
+
+        $place->setValidate(true);
+
+        $errors = $this->placeRepository->save($place);
+
+        if(!empty($errors))
+        {
+            return $this->renderErrors($app, $errors);
+        }
+
+        return $app['renderer']->render($app, 204, null);
     }
 }

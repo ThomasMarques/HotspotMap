@@ -50,7 +50,7 @@ $app['security.firewalls'] = array(
         'form' => array('login_path' => '/login', 'check_path' => '/admin/login_check'),
         'logout' => array('logout_path' => '/logout'),
         'users' => $app->share(function () use ($app) {
-                return $app['UserMapper'];
+                return HotspotMap\dal\DALFactory::getRepository('User');
             }),
     )
 );
@@ -87,10 +87,11 @@ $app->put('/admin/places/{id}', 'HotspotMap\Controller\PlaceController::putActio
     ->bind('place_put');
 $app->delete('/admin/places/{id}', 'HotspotMap\Controller\PlaceController::deleteAction')
     ->bind('place_delete');
+
 $app->get('/admin/places}', 'HotspotMap\Controller\PlaceController::adminListAction')
     ->bind('admin_place_list');
-$app->get('/admin/places/{id}', 'HotspotMap\Controller\PlaceController::validateAction')
-    ->bind('validate');
+$app->put('/admin/places/{id}', 'HotspotMap\Controller\PlaceController::validateAction')
+    ->bind('put_validate');
 
 $app->get('/geoloc/{address}', 'HotspotMap\Controller\GeolocController::findAddressAction')
     ->bind('geolocAddress');
