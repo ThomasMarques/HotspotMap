@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `mailAddress` varchar(50) NOT NULL,
   `displayName` varchar(50) DEFAULT NULL,
   `password` varchar(255) NOT NULL,
-  `salt` varchar(255) NOT NULL,
+  `salt` varchar(255) DEFAULT NULL,
   `roles` varchar(255) NOT NULL,
   PRIMARY KEY (`userId`),
   UNIQUE KEY `mailAddress` (`mailAddress`)
@@ -63,3 +63,9 @@ CREATE TABLE IF NOT EXISTS `user` (
 ALTER TABLE `comment`
   ADD CONSTRAINT `comment_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `comment_ibfk_2` FOREIGN KEY (`placeId`) REFERENCES `place` (`placeId`) ON DELETE CASCADE ON UPDATE CASCADE;
+  
+--
+-- Enregistrement
+--
+  INSERT INTO `user` (`userId`, `mailAddress`, `displayName`, `password`, `salt`, `roles`) VALUES
+(1, 'admin@hotspotmap.fr', 'Admin HotspotMap', 'IB31hF63MQioebfvKYMBJhDO8OR4gGgx62yJr8McfBDwecsTWVlBOkP3pu1+ofA2x0QJ9YptEpEVQbFb21D31Q==', NULL, 'ROLE_ADMIN');
