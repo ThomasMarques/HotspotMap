@@ -9,6 +9,7 @@ use Silex\Provider\TwigServiceProvider;
 use Hateoas\HateoasBuilder;
 use Hateoas\UrlGenerator\SymfonyUrlGenerator;
 use Hateoas\UrlGenerator\CallableUrlGenerator;
+use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Geocoder\Provider\GeocoderServiceProvider;
 
 $app = new Silex\Application();
@@ -47,7 +48,7 @@ $app['security.firewalls'] = array(
     ),
     'secured' => array(
         'anonymous' => true,
-        'form' => array('login_path' => '/login', 'check_path' => '/admin/places'),
+        'form' => array('login_path' => '/login', 'check_path' => '/admin/login_check'),
         'logout' => array('logout_path' => '/logout'),
         'users' => $app->share(function () use ($app) {
                 return HotspotMap\dal\DALFactory::getRepository('User');
@@ -58,6 +59,10 @@ $app['security.firewalls'] = array(
 $app['security.access_rules'] = array(
     array('^/admin', 'ROLE_ADMIN'),
 );
+
+$app['security.encoder.digest'] = $app->share(function ($app) {
+    return new MessageDigestPasswordEncoder('sha512', true, 5000);
+});
 
 $app->register(new Silex\Provider\SessionServiceProvider());
 $app->register(new Silex\Provider\SecurityServiceProvider(), array(

@@ -50,7 +50,7 @@ class PlaceController extends Controller
         $places = $this->placeRepository->findNearest($lat, $lon, $distance, 1, $limit);
         $total = $this->placeRepository->countPlaces();
 
-        $result = $app['collection-helper']->buildCollection($places, 'place_list', 'places', $page, $limit, $total);
+        $result = $app['collection-helper']->buildCollection($places, 'place_list', 'places', 1, $limit, $total);
 
         return $app['renderer']->render($app, 200, $result);
     }
@@ -68,7 +68,7 @@ class PlaceController extends Controller
         $places = $this->placeRepository->findNearest($lat, $lon, $distance, 1, $limit);
         $total = $this->placeRepository->countPlaces();
 
-        $result = $app['collection-helper']->buildCollection($places, 'place_list', 'places', $page, $limit, $total);
+        $result = $app['collection-helper']->buildCollection($places, 'place_list', 'places', 1, $limit, $total);
 
         return $app['renderer']->render($app, 200, $result);
     }
