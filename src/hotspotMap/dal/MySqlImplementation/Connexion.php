@@ -8,8 +8,8 @@ class Connexion extends \PDO
     public function __construct()
     {
         $dsn = "mysql:host=localhost;dbname=hotspotmap";
-        $user = "root";
-        $password = "";
+        $user = "Put your username here";
+        $password = "Put your password here";
         parent::__construct($dsn, $user, $password);
     }
 
