@@ -55,6 +55,11 @@ module.factory('iconFactory', ['$rootScope', function($rootScope) {
             size: new google.maps.Size(19, 19),
             origin: new google.maps.Point(140,20),
             anchor: new google.maps.Point(10, 10)
+        },
+        'search': {
+            size: new google.maps.Size(32, 32),
+            origin: new google.maps.Point(193,15),
+            anchor: new google.maps.Point(16, 16)
         }
     };
 
@@ -91,7 +96,7 @@ module.factory('commentService', ['$rootScope', '$http', function($rootScope, $h
 
         $http({
             method: 'GET',
-            url: '/comments'
+            url: '/comments/'+id
         }).
         success(function(data, status, headers, config) {
             serviceInstance.comments = data._embedded.comments;
@@ -171,31 +176,9 @@ module.factory('placeService', ['$rootScope', '$http', function($rootScope, $htt
         });
     }
 
-    serviceInstance.searchPlaceFromLocation = function (pos) {
+    serviceInstance.searchPlaceFromLocation = function searchPlaceFromLocation(pos) {
 
-        $http({method: 'GET', url: '/geoloc/'+pos.k.toString().replace('.',',')+'/'+pos.A.toString().replace('.',',')}).
-        success(function(data, status, headers, config) {
-
-                $place = {
-                    latitude:data.latitude,
-                    longitude:data.longitude,
-                    address: data.street_number + ' ' + data.street_name,
-                    town: data.city,
-                    country: data.country
-                };
-
-                $rootScope.$broadcast( serviceBroadcastKeys.placeFounded, $place );
-
-
-        }).
-        error(function(data, status, headers, config) {
-        });
-
-    }
-
-    serviceInstance.searchPlaceFromAddress = function (address) {
-
-        $http({method: 'GET', url: '/geoloc/'+address}).
+        $http({method: 'GET', url: '/places/'+pos.k.toString().replace('.',',')+'/'+pos.A.toString().replace('.',',')}).
         success(function(data, status, headers, config) {
 
             $place = {
@@ -215,7 +198,29 @@ module.factory('placeService', ['$rootScope', '$http', function($rootScope, $htt
 
     }
 
-    serviceInstance.addComment = function (comment) {
+    serviceInstance.searchPlaceFromAddress = function searchPlaceFromAddress(address, broadcastKey) {
+
+        $http({method: 'GET', url: '/places/'+address}).
+        success(function(data, status, headers, config) {
+
+            $place = {
+                latitude:data.latitude,
+                longitude:data.longitude,
+                address: data.street_number + ' ' + data.street_name,
+                town: data.city,
+                country: data.country
+            };
+
+            $rootScope.$broadcast( broadcastKey, $place );
+
+
+        }).
+        error(function(data, status, headers, config) {
+        });
+
+    }
+
+    serviceInstance.addComment = function addComment(comment) {
         $http({
             method: 'POST',
             url: '/comments?' +
@@ -234,6 +239,20 @@ module.factory('placeService', ['$rootScope', '$http', function($rootScope, $htt
         });
     }
 
+    serviceInstance.findNearest = function findNearest(address) {
+
+        $http({method: 'GET', url: '/places/'+address+'/10'}).
+        success(function(data, status, headers, config) {
+
+            serviceInstance.places = data._embedded.places;
+            serviceInstance.searchPlaceFromAddress(address, serviceBroadcastKeys.searchFounded);
+
+        }).
+        error(function(data, status, headers, config) {
+        });
+
+    }
+
     return serviceInstance;
 
 }]);
@@ -243,6 +262,7 @@ module.factory('hotspotMainService', ['$rootScope', 'placeService', 'iconFactory
     var serviceInstance = {};
 
     serviceInstance.map;
+    serviceInstance.markers = [];
     serviceInstance.currentZoom;
     serviceInstance.currentClickPos;
 
@@ -275,7 +295,18 @@ module.factory('hotspotMainService', ['$rootScope', 'placeService', 'iconFactory
 
             var marker = iconFactory.getMarker(iconFactory.type.dev, options);
             marker.set('id',place.place_id);
+            serviceInstance.markers.push(marker);
         }
+    }
+
+    serviceInstance.removeMarkers = function () {
+
+        for (var i = 0; i < serviceInstance.markers.length; i++) {
+            var marker = serviceInstance.markers[i];
+            marker.setMap(null);
+        }
+
+
     }
 
     serviceInstance.initialize = function () {
@@ -428,7 +459,17 @@ function AddCtrl($scope, $rootScope, hotspotMainService, placeService, sectionSe
 
         var place = $scope.place;
         if ($scope.addressDisplayed) {
-            placeService.searchPlaceFromAddress(place.address+', '+place.town+', '+place.country);
+            var address = '';
+            if (place.address === undefined) {
+                place.address = '';
+            }
+            if (place.town === undefined) {
+                place.town = '';
+            }
+            if (place.country === undefined) {
+                place.country = '';
+            }
+            placeService.searchPlaceFromAddress(place.address+','+place.town+','+place.country, serviceBroadcastKeys.placeFounded);
         } else if ($scope.locationDisplayed) {
             placeService.searchPlaceFromLocation(new google.maps.LatLng(place.latitude, place.longitude));
         }
@@ -479,7 +520,7 @@ function CommentCtrl($scope, $rootScope, hotspotMainService, placeService, comme
     $scope.comments = {};
 
     $scope.commentsForPlaceId = function (placeId) {
-        commentService.getCommentsForPlaceId(id);
+        commentService.getCommentsForPlaceId(placeId);
     }
 
     $rootScope.$on(serviceBroadcastKeys.commentListFounded, function commentListFounded() {
@@ -530,7 +571,10 @@ function DetailCtrl($scope, $rootScope, hotspotMainService, placeService, commen
 
 }
 
-function MainCtrl($scope, $rootScope, hotspotMainService, placeService, sectionService) {
+function MainCtrl($scope, $rootScope, hotspotMainService, placeService, sectionService, iconFactory) {
+
+    $scope.search = {};
+    $scope.searchDisplayed = false;
 
     $scope.createMap = function (place) {
         hotspotMainService.initialize();
@@ -566,6 +610,32 @@ function MainCtrl($scope, $rootScope, hotspotMainService, placeService, sectionS
         sectionService.toggleExpandSection("home");
         hotspotMainService.searchUserLocation();
     }
+
+    $scope.search = function() {
+        $scope.searchDisplayed = true;
+        placeService.findNearest($scope.search.address);
+    }
+
+    $scope.clearSearch = function() {
+        $scope.searchDisplayed = false;
+        hotspotMainService.removeMarkers();
+        placeService.getPlaces(serviceBroadcastKeys.placesInitialized);
+    }
+
+    $rootScope.$on(serviceBroadcastKeys.searchFounded, function($broadcastScope, $searchPlace) {
+
+        hotspotMainService.removeMarkers();
+
+        var options = {
+            position: new google.maps.LatLng($searchPlace.latitude, $searchPlace.longitude),
+            map: hotspotMainService.map
+        };
+        var marker = iconFactory.getMarker(iconFactory.type.search, options);
+        hotspotMainService.markers.push(marker);
+        hotspotMainService.setMarkers();
+        hotspotMainService.goTo($searchPlace);
+
+    });
 
     $rootScope.$on(serviceBroadcastKeys.placeAdded, function() {
         sectionService.toggleActiveNavState("addNav");

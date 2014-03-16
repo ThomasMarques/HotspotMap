@@ -53,6 +53,18 @@ class CommentController extends Controller
 
     }
 
+    public function listForPlaceAction (Request $request, Application $app, $place, $limit = 20)
+    {
+
+        $comments = $this->commentRepository->findAllByPlaceId($place);
+        $total = ceil($this->commentRepository->countComments() / $limit);
+
+        $result = $app['collection-helper']->buildCollection($comments, 'comment_list', 'comments', $page, $limit, $total);
+
+        return $app['renderer']->render($app, 200, $result);
+
+    }
+
     public function getAction (Request $request, Application $app, $id)
     {
 
