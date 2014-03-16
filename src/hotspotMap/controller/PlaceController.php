@@ -205,7 +205,7 @@ class PlaceController extends Controller
 
         $internetAccess = $request->get("internetAccess", null);
         if(null != $internetAccess)
-            $place->setCoffee(intval($internetAccess) != 0);
+            $place->setInternetAccess(intval($internetAccess) != 0);
 
         $placesNumber = $request->get("placesNumber", null);
         if(null != $placesNumber)
@@ -213,7 +213,7 @@ class PlaceController extends Controller
 
         $comfort = $request->get("comfort", null);
         if(null != $comfort)
-            $place->setPlacesNumber(intval($comfort));
+            $place->setComfort(intval($comfort));
 
         $frequenting = $request->get("frequenting", null);
         if(null != $frequenting)
