@@ -145,9 +145,9 @@ module.factory('placeService', ['$rootScope', '$http', function($rootScope, $htt
                 '&schedules=' + place.schedules +
                 '&description=' + place.description +
                 '&hotspotType=0' +
-                '&coffee=1' +
-                '&internetAccess=1' +
-                '&placesNumber=5' +
+                '&coffee=' + (place.cofee ? 1 : 0) +
+                '&internetAccess=' + (place.internetAccess ? 1 : 0) +
+                '&placesNumber=' + place.placesNumber +
                 '&comfort=1' +
                 '&frequenting=1'
         }).
@@ -226,7 +226,6 @@ module.factory('placeService', ['$rootScope', '$http', function($rootScope, $htt
             url: '/comments?' +
                 'content=' + comment.content +
                 '&placeId=' + comment.placeId +
-                '&authorId=1' +
                 '&authorDisplayName=anonymous'
         }).
         success(function(data, status, headers, config) {
