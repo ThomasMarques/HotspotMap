@@ -104,6 +104,8 @@ section .cancel {
     background: #fff;
     overflow: hidden;
     padding: 30px;
+    overflow: auto;
+    height: 100%;
 }
 
 #detail .location {

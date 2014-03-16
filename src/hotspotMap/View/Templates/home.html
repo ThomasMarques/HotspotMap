@@ -4,7 +4,7 @@
 <!-- Built with Divshot - http://www.divshot.com -->
 
 <head>
-    <title>New Page</title>
+    <title>dev places</title>
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/main.css">
@@ -70,6 +70,20 @@
                     <label for="schedulesInput">Schedules</label>
                     <input type="text" class="form-control" id="schedulesInput" placeholder="7:30 - 21:00" ng-model="place.schedules">
                 </div>
+                <div class="form-group">
+                    <label for="capacityInput">Place Capacity</label>
+                    <input type="text" class="form-control" id="capacityInput" placeholder="Enter a place capacity" ng-model="place.placesNumber">
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input ng-model="place.cofee" type="checkbox"> Coffee ?
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input ng-model="place.internetAccess" type="checkbox"> Internet Access ?
+                    </label>
+                </div>
                 <div class="form-group" ng-show="addressDisplayed">
                     <hr />
                     <label for="addressInput">Address</label>
@@ -108,10 +122,31 @@
         <section id="detail">
             <span class="glyphicon glyphicon-remove-circle cancel" ng-click="closeSection()"></span>
             <div ng-controller="DetailCtrl" ng-model="place">
-                <div>((place.name))</div>
-                <div>((place.description))</div>
-                <div>((place.schedules))</div>
-                <div>Added on ((place.submission_date))</div>
+                <div><h1>((place.name))</h1></div>
+                <div>
+                    <h3>Description</h3>
+                    <p>((place.description))</p>
+                </div>
+                <div>
+                    <h3>Schedules</h3>
+                    <p>((place.schedules))</p>
+                </div>
+                <div>
+                    <h3>Capacity</h3>
+                    <p>((place.places_number))</p>
+                </div>
+                <div>
+                    <h3>Coffee ?</h3>
+                    <p>((place.coffee))</p>
+                </div>
+                <div>
+                    <h3>Internet Access ?</h3>
+                    <p>((place.internet_access))</p>
+                </div>
+                <div>
+                    <h4>Added on </h4>
+                    <p>((place.submission_date))</p>
+                </div>
                 <div class="location">
                     <div class="lat">((place.latitude))</div>
                     <div class="lon">((place.longitude))</div>
