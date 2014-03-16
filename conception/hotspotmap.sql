@@ -1,5 +1,12 @@
+--
+-- Base de données: `hotspotmap`
+--
 CREATE DATABASE IF NOT EXISTS `hotspotmap` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 USE `hotspotmap`;
+
+--
+-- Structure de la table `comment`
+--
 
 CREATE TABLE IF NOT EXISTS `comment` (
   `commentId` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -10,7 +17,11 @@ CREATE TABLE IF NOT EXISTS `comment` (
   PRIMARY KEY (`commentId`),
   KEY `userId` (`userId`),
   KEY `placeId` (`placeId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=0 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=21 ;
+
+--
+-- Structure de la table `place`
+--
 
 CREATE TABLE IF NOT EXISTS `place` (
   `placeId` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -29,17 +40,26 @@ CREATE TABLE IF NOT EXISTS `place` (
   `submissionDate` date NOT NULL,
   `validate` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`placeId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=0 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=18 ;
+
+--
+-- Structure de la table `user`
+--
 
 CREATE TABLE IF NOT EXISTS `user` (
   `userId` bigint(20) NOT NULL AUTO_INCREMENT,
   `mailAddress` varchar(50) NOT NULL,
-  `privilege` int(11) NOT NULL DEFAULT '0' COMMENT '0, 1 or 2',
   `displayName` varchar(50) DEFAULT NULL,
+  `password` varchar(255) NOT NULL,
+  `salt` varchar(255) NOT NULL,
+  `roles` varchar(255) NOT NULL,
   PRIMARY KEY (`userId`),
   UNIQUE KEY `mailAddress` (`mailAddress`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=0 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
+--
+-- Contraintes pour la table `comment`
+--
 ALTER TABLE `comment`
   ADD CONSTRAINT `comment_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `comment_ibfk_2` FOREIGN KEY (`placeId`) REFERENCES `place` (`placeId`) ON DELETE CASCADE ON UPDATE CASCADE;
