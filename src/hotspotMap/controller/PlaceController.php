@@ -30,8 +30,8 @@ class PlaceController extends Controller
         $argLimit = $request->get("limit", null);
         $limit = (null != $argLimit) ? intval($argLimit) : 20;
 
-        $places = $this->placeRepository->findAllByPage($page, $limit);
-        $total = ceil($this->placeRepository->countPlaces() / $limit);
+        $places = $this->placeRepository->findAllValidateByPage($page, $limit);
+        $total = ceil($this->placeRepository->countValidatePlaces() / $limit);
 
         $result = $app['collection-helper']->buildCollection($places, 'place_list', 'places', $page, $limit, $total);
 
@@ -48,7 +48,7 @@ class PlaceController extends Controller
         $lon = str_replace(',','.',$lon);
 
         $places = $this->placeRepository->findNearest($lat, $lon, $distance, 1, $limit);
-        $total = $this->placeRepository->countPlaces();
+        $total = $this->placeRepository->countValidatePlaces();
 
         $result = $app['collection-helper']->buildCollection($places, 'place_list', 'places', 1, $limit, $total);
 
@@ -66,7 +66,7 @@ class PlaceController extends Controller
         $lon = $result['longitude'];
 
         $places = $this->placeRepository->findNearest($lat, $lon, $distance, 1, $limit);
-        $total = $this->placeRepository->countPlaces();
+        $total = $this->placeRepository->countValidatePlaces();
 
         $result = $app['collection-helper']->buildCollection($places, 'place_list', 'places', 1, $limit, $total);
 
@@ -227,7 +227,7 @@ class PlaceController extends Controller
         $places = $this->placeRepository->findAllNotValidated();
         $size = sizeof($places);
 
-        $result = $app['collection-helper']->buildCollection($places, 'place_list', 'places', 1, $size, $size);
+        $result = $app['collection-helper']->buildCollection($places, 'admin_place_list', 'places', 1, $size, $size);
 
         return $app['renderer']->render($app, 200, $result);
     }

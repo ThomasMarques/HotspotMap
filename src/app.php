@@ -99,8 +99,8 @@ $app->get('/places/{lat}/{lon}/{distance}', 'HotspotMap\Controller\PlaceControll
     ->bind('place_nearest');
 $app->post('/places', 'HotspotMap\Controller\PlaceController::postAction')
     ->bind('place_post');
-$app->put('/places/{id}', 'HotspotMap\Controller\PlaceController::putAction')
-    ->bind('place_put');
+/*$app->put('/places/{id}', 'HotspotMap\Controller\PlaceController::putAction')
+    ->bind('place_put');*/
 
 $app->get('/admin/places', 'HotspotMap\Controller\PlaceController::adminListAction')
     ->bind('admin_place_list');

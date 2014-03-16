@@ -30,7 +30,7 @@ class PlaceRepository
     /**
      * @return int
      */
-    public function countPlaces()
+    public function countValidatePlaces()
     {
         $data = $this->finder->select(array("count(*)"))
             ->from(array("Place"))
@@ -44,10 +44,11 @@ class PlaceRepository
      * @param int $limit
      * @return array of Place
      */
-    public function findAllByPage($page, $limit)
+    public function findAllValidateByPage($page, $limit)
     {
         $data = $this->finder->select(array("*"))
             ->from(array("Place"))
+            ->where("validate = :validate", ["validate" => 1])
             ->limit(($page-1) * $limit, $limit)
             ->getResults();
 
@@ -89,7 +90,7 @@ class PlaceRepository
      */
     public function findNearest($latitude, $longitude, $searchDistance, $page, $limit) {
 
-        $places = $this->findAllByPage($page, $limit);
+        $places = $this->findAllValidateByPage($page, $limit);
 
         $lat = $latitude;
         $lon = $longitude;
