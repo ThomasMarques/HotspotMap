@@ -39,6 +39,60 @@ class PlaceController extends Controller
 
     }
 
+    public function nearestAction (Request $request, Application $app, $lat = '', $lon = '', $distance = 1)
+    {
+
+        $limit=200;
+
+        $lat = str_replace(',','.',$lat);
+        $lon = str_replace(',','.',$lon);
+
+        $places = $this->placeRepository->findNearest($lat, $lon, $distance, 1, $limit);
+        $total = $this->placeRepository->countPlaces();
+
+        $result = $app['collection-helper']->buildCollection($places, 'place_list', 'places', $page, $limit, $total);
+
+        return $app['renderer']->render($app, 200, $result);
+    }
+
+    public function nearestAddressAction (Request $request, Application $app, $address = '', $distance = 1)
+    {
+
+        $limit=200;
+
+        $geocoder = $app['geocoder'];
+        $result = $geocoder->geocode($address);
+        $lat = $result['latitude'];
+        $lon = $result['longitude'];
+
+        $places = $this->placeRepository->findNearest($lat, $lon, $distance, 1, $limit);
+        $total = $this->placeRepository->countPlaces();
+
+        $result = $app['collection-helper']->buildCollection($places, 'place_list', 'places', $page, $limit, $total);
+
+        return $app['renderer']->render($app, 200, $result);
+    }
+
+    public function addressAction (Request $request, Application $app, $address = '')
+    {
+
+        $geocoder = $app['geocoder'];
+        $result = $geocoder->geocode($address);
+
+        return $app['renderer']->render($app, 200, $result);
+
+    }
+
+    public function coordinatesAction (Request $request, Application $app, $lat = '', $lon = '')
+    {
+
+        $geocoder = $app['geocoder'];
+        $result = $geocoder->reverse(str_replace(',','.',$lat), str_replace(',','.',$lon));
+
+        return $app['renderer']->render($app, 200, $result);
+
+    }
+
     public function getAction (Request $request, Application $app, $id)
     {
 

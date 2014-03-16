@@ -35,9 +35,10 @@
             <div class="collapse navbar-collapse">
                 <form class="navbar-form navbar-right">
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Search">
+                        <input type="text" class="form-control" placeholder="Search near location" ng-model="search.address">
                     </div>
-                    <button type="submit" class="btn btn-default">Submit</button>
+                    <button type="submit" class="btn btn-default" ng-click="search()" ng-show="!searchDisplayed">Search arround 10km</button>
+                    <button type="submit" class="btn btn-danger" ng-click="clearSearch()" ng-show="searchDisplayed">Clear Search</button>
                 </form>
                 <ul id="navigation" class="nav navbar-nav">
                     <li id="homeNav" ng-click="home()"><a href="#">Home</a></li>
